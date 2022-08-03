@@ -51,9 +51,10 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # Installed Apps
-    'account',
-    'main',
-    'board',
+    'accounts',
+    'lectures',
+    'clubs',
+    'community',
 ]
 
 REST_FRAMEWORK = {

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'lectures',
     'clubs',
     'community',
+    'mentorings',
 ]
 
 REST_FRAMEWORK = {

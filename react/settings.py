@@ -14,6 +14,7 @@ import os
 import os, json
 from dotenv import load_dotenv
 from pathlib import Path
+from datetime import timedelta
 
 load_dotenv()
 
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
 
     # Installed Packages
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_yasg',
     'corsheaders',
 
@@ -60,13 +62,26 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        #'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 
+    #'DEFAULT_PERMISSION_CLASSES': [
+    #    'rest_framework.permissions.IsAuthenticated',
+    #],
+
+}
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME' : timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME' : timedelta(days=7),  
+    'ROTATE_REFRESH_TOKENS' : False,  # Token 재발급 
+    'TOKEN_USER_CLASS' : 'members.Members',
 }
 
 MIDDLEWARE = [
@@ -104,6 +119,8 @@ WSGI_APPLICATION = 'react.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+AUTH_USER_MODEL = 'accounts.Members'
 
 DATABASES = {
     'default': {

@@ -10,7 +10,7 @@ class ClubsViewSet(ModelViewSet):
 
 
 class ClubsNewViewSet(ModelViewSet):
-    queryset = Clubs.objects.all('-id')
+    queryset = Clubs.objects.all().order_by('-id')
     serializer_class = ClubsSerializer
 
 

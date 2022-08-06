@@ -105,7 +105,7 @@ WSGI_APPLICATION = 'react.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
+"""DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'REACTDB',
@@ -113,6 +113,13 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'PORT': '3306',
         'PASSWORD' : os.environ.get("DB_PASSWORD"),
+    }
+}"""
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
     }
 }
 

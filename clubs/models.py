@@ -1,17 +1,38 @@
 from django.db import models
-"""
-from accounts.models import Members
-fields..?
-"""
 
+from accounts.models import Members
+
+FIELDS = [
+    ('1', '관리자'),
+    ('2', '전문가 및 관련 종사자'),
+    ('3', '사무 종사자'),
+    ('4', '서비스 종사자'),
+    ('5', '판매 종사자'),
+    ('6', '농림 어업 숙련 종사자'),
+    ('7', '기은원 및 관련 기능 종사자'),
+    ('8', '장치 기계 조작 및 조립 종사자'),
+    ('9', '단순 노무 종사자'),
+    ('10', '군인 및 학생'),
+]
+
+LOCATIIONS = [
+    ('1', '경기도'),
+    ('2', '강원도'),
+    ('3', '충청북도'),
+    ('4', '충청남도'),
+    ('5', '전라북도'),
+    ('6', '전라남도'),
+    ('7', '경상북도'),
+    ('8', '경상남도'),
+]
 
 class Clubs(models.Model):
     id = models.BigAutoField(primary_key=True)
     leader_id = models.ForeignKey("Members", on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
-    field = models.ForeignKey("Fields", on_delete=models.CASCADE)
-    location = models.ForeignKey("Locations", on_delete=models.CASCADE)
+    field = models.CharField(max_length=2, choices=FIELDS)
+    location = models.CharField(max_length=2, choices=LOCATIIONS)
     age_group = models.CharField(max_length=20)
     limit = models.IntegerField()
     member = models.ManyToManyField(Members)
@@ -40,13 +61,13 @@ class Clubboard_comment(models.Model):
     content = models.TextField()
     create_time = models.DateTimeField(auto_now_add=True)
     writer_id = models.ForeignKey("Members", on_delete=models.CASCADE)
-    board_id = modelds.ForeignKey("Clubboard", on_delete=models.CASCADE)
+    board_id = models.ForeignKey("Clubboard", on_delete=models.CASCADE)
     comment_id = models.ForeignKey("Clubboard_comment", on_delete=models.CASCADE)
 
 
 class Galleries(models.Model):
     id = models.BigAutoField(primary_key=True)
-    writer_id = models.ForeignKey("Members", on_delete=CASCADE)
+    writer_id = models.ForeignKey("Members", on_delete=models.CASCADE)
     title = models.CharField()
     image = models.CharField()
     upload_time = models.DateTimeField(auto_now_add=True)

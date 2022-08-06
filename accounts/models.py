@@ -41,7 +41,7 @@ class MembersManager(BaseUserManager):
             name = name,
             nickname = nickname,
             password = password, 
-            email = email,
+            email = self.normalize_email(email),
             birth = birth,
             job = job,
         )
@@ -101,3 +101,6 @@ class Members(AbstractBaseUser):
 
     class Meta: #모든 모델에 class Meta 넣기
         db_table="members"
+
+
+

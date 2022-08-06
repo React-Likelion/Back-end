@@ -1,6 +1,11 @@
 from .models import Members
+from .tokens import account_activation_token
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.core.mail import EmailMessage
 
 class SignupSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -36,10 +41,24 @@ class SignupSerializer(serializers.ModelSerializer):
         token = RefreshToken.for_user(user)
         user.set_password(validated_data['password'])
         user.refreshtoken = token
+        user.is_active = False
         user.save()
+
+        message = render_to_string('account_activate_email.html', {
+          'user': user,
+          'domain': 'localhost:8000',
+          'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+          'token': account_activation_token.make_token(user),
+        })
+
+        mail_subject = 'Re:act 계정을 활성화 해주세요'
+        to_email = validated_data['email']
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
     
-        return user
+        return validated_data
  
+
 class LoginSerializer(serializers.ModelSerializer):
     identification = serializers.CharField(
         required = True,
@@ -70,7 +89,8 @@ class LoginSerializer(serializers.ModelSerializer):
 
         token = RefreshToken.for_user(user=user)
         data = {
-            'user' : user.id,
+            'user' : user.id, 
+            "message": "login successs",
             'refresh_token' : str(token),
             'access_token' : str(token.access_token)
         }

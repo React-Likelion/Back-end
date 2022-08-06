@@ -25,9 +25,9 @@ class MembersManager(BaseUserManager):
             email = self.normalize_email(email),
             birth = birth,
             job = job,
-            #is_active = True,
-            #is_staff = False,
-            #is_superuser = False,
+            is_active = False,
+            is_staff = False,
+            is_superuser = False,
         )
         members.set_password(password)
         members.save(using=self._db)
@@ -45,6 +45,7 @@ class MembersManager(BaseUserManager):
             birth = birth,
             job = job,
         )
+        members.is_active = True
         members.is_staff = True,
         members.is_superuser = True,
         members.save(using=self._db)

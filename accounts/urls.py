@@ -10,8 +10,11 @@ router = routers.DefaultRouter()
 router.register(r'signup', MembersViewSet)
 
 urlpatterns = [
-    path('api-auth/', include('rest_framework.urls')),
+    # path('api-auth/', include('rest_framework.urls')),
+    #http://127.0.0.1:8000/accounts/login/
+    #토큰발급
     path('login/', LoginView.as_view(), name='login'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
     path('', include(router.urls))
 ]

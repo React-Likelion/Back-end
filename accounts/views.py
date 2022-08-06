@@ -1,4 +1,4 @@
-from .models import Members
+from .models import User
 from rest_framework import viewsets
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -8,29 +8,28 @@ from rest_framework_simplejwt.tokens import RefreshToken
 #from rest_framework.permissions import IsAuthenticated
 
 class MembersViewSet(viewsets.ModelViewSet):
-    queryset = Members.objects.all()
+    queryset = User.objects.all()
     serializer_class = MembersSerializer
 
     #permission_classes = []
-
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-
         if serializer.is_valid(raise_exception=False):
             user = serializer.save(request)
-
             token = RefreshToken.for_user(user)
             refresh = str(token)
             access = str(token.access_token)
-
             return JsonResponse({'user': user, 'access': access, 'refresh': refresh})
- 
+
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
     
     def post(self, request):
+        print('11111111111')
         serializer = self.get_serializer(data=request.data)
-        
+        print('22222222222222222222222')
+        print(serializer)
+        print('22222222222222222222222')
         serializer.is_valid(raise_exception = True)
         token = serializer.validated_data
         return Response({"token":token}, status=status.HTTP_200_OK)

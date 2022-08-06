@@ -60,9 +60,9 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
 
-    #'DEFAULT_PERMISSION_CLASSES': [
-    #    'rest_framework.permissions.IsAuthenticated',
-    #],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #    'rest_framework.permissions.IsAuthenticatedOrReadOnly ',
+    # ],
 
 }
 
@@ -91,7 +91,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'react.urls'
 
-AUTH_USER_MODEL = 'accounts.Members'
 
 TEMPLATES = [
     {
@@ -126,7 +125,7 @@ WSGI_APPLICATION = 'react.wsgi.application'
 #     }
 # }
 
-AUTH_USER_MODEL = 'accounts.Members'
+AUTH_USER_MODEL = 'accounts.User'
 
 
 DATABASES = {

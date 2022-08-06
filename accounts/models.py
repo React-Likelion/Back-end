@@ -5,23 +5,10 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 class MembersManager(BaseUserManager):
     # 일반 user 생성
     def create_user(self, identification, name, nickname, password, email, birth, job):
-        if not identification:
-            raise ValueError('must have member identification')
-        if not name:
-            raise ValueError('must have member name')
-        if not nickname:
-            raise ValueError('must have member nickname')
-        if not email:
-            raise ValueError('must have member email')
-        if not birth:
-            raise ValueError('must have member birth')
-        if not job:
-            raise ValueError('must have member job')
-        members = self.model(
+        User = self.model(
             identification = identification,
             name = name,
             nickname = nickname,
-            password = password, 
             email = self.normalize_email(email),
             birth = birth,
             job = job,
@@ -29,14 +16,13 @@ class MembersManager(BaseUserManager):
             is_admin = False,
             is_superuser = False,
         )
-        members.set_password(password)
-        members.save(using=self._db)
-
-        return members
+        User.set_password(password)
+        User.save(using=self._db)
+        return User
         
     # 관리자 user 생성
     def create_superuser(self, identification, name, nickname, password, email, birth, job, ):
-        members = self.create_user(
+        User = self.create_user(
             identification = identification,
             name = name,
             nickname = nickname,
@@ -45,11 +31,11 @@ class MembersManager(BaseUserManager):
             birth = birth,
             job = job,
         )
-        members.is_admin = True,
-        members.is_superuser = True,
-        members.save(using=self._db)
+        User.is_admin = True,
+        User.is_superuser = True,
+        User.save(using=self._db)
 
-        return members
+        return User
 
 
 JOB_CHOICES = [
@@ -65,7 +51,7 @@ JOB_CHOICES = [
     ('10', '군인 및 학생'),
 ]
 
-class Members(AbstractBaseUser):
+class User(AbstractBaseUser):
     #id = models.BigAutoField(primary_key=True)
     identification = models.CharField(max_length=11, unique=True)
     name = models.CharField(max_length=11)
@@ -100,7 +86,7 @@ class Members(AbstractBaseUser):
         return str(self.nickname)
 
     class Meta: #모든 모델에 class Meta 넣기
-        db_table="members"
+        db_table="User"
 
 
 

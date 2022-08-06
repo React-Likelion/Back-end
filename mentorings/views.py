@@ -1,11 +1,13 @@
 from mentorings import models, serializers
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 #멘토링 CRUD
 class MentoringViewSet(viewsets.ModelViewSet):
     queryset=models.mentorings.objects.all()
     serializer_class=serializers.MentoringSerializers
+    permission_classes=[IsAuthenticated]
     filter_backends=[DjangoFilterBackend]
     filterset_fields=['title', 'age_group', 'location', 'field']
 

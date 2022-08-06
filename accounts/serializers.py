@@ -1,10 +1,10 @@
-from .models import Members
+from .models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class MembersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Members
+        model = User
         fields = '__all__'
  
 class LoginSerializer(serializers.ModelSerializer):
@@ -18,17 +18,16 @@ class LoginSerializer(serializers.ModelSerializer):
         style= {'input_type' : 'password'}
     )
     class Meta(object):
-        model = Members
+        model = User
         fields = ('identification', 'password')
 
     def validate(self, data):
         identification = data.get('identification',None)
         password = data.get('password',None)
 
-        if Members.objects.filter(identification=identification).exists():
-            user = Members.objects.get(identification=identification)
-
-            if not user.check_password(password):
+        if User.objects.filter(identification=identification).exists():
+            user = User.objects.get(identification=identification)
+            if user.check_password(password):
                 raise serializers.ValidationError('Check Your Identification or Password')
         
         else:

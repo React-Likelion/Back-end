@@ -1,5 +1,4 @@
 import os
-import os, json
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -37,6 +36,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'corsheaders',
+    'django_filters',
 
     # Installed Apps
     'accounts',
@@ -56,6 +56,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
 
 }
 
@@ -72,6 +75,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'react.urls'
+
+AUTH_USER_MODEL = 'accounts.Members'
 
 TEMPLATES = [
     {

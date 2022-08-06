@@ -10,3 +10,9 @@ class Mentoring_chatsSerializers(serializers.ModelSerializer):
     class Meta:
         model=models.mentoring_chats
         fields='__all__'
+        
+class LocationsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model=models.locations
+        fields='__all__'
+        

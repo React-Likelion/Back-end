@@ -39,6 +39,7 @@ class Clubs(models.Model):
     image = models.CharField(max_length=100)
 
 
+
 class ClubMembers(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE)

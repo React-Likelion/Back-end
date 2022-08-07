@@ -48,6 +48,7 @@ class ClubMembers(models.Model):
 
 class Clubboard(models.Model):
     id = models.BigAutoField(primary_key=True)
+    club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE)
     writer_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE)
     title = models.TextField()
     description = models.TextField()

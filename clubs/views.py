@@ -1,23 +1,51 @@
+import re
 from django.shortcuts import render
 from django.db.models import Count
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import filters
 from .models import *
 from .serializer import *
+
+
+def include_filter(request, include_field, related_field, queryset):
+    filter_list = {}
+    
+    for i in include_field:
+        filter = request.query_params.get(i, None)
+        if filter is None: continue
+        
+        filter_list[f"{i}__regex"] = rf".*{filter}.*"
+    
+    for i in related_field:
+        filter = request.query_params.get(i, None)
+        if filter is None: continue
+        
+        filter_list[i] = filter
+    
+    return queryset.filter(**filter_list)
 
 class ClubsViewSet(ModelViewSet):
     queryset = Clubs.objects.all()
     serializer_class = ClubsSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'field', 'location', 'age_group']
 
 
 class ClubsArticleViewSet(ModelViewSet):
     queryset = Clubboard.objects.all()
     serializer_class = ClubBoardSerializer
-
+        
     @action(detail=True, methods=['GET'])
     def article_list(self, request, **kwargs):
         article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
+        search_field = ['title', 'description', 'category']
+        related_field = ['writer_id']
+
+        if request.query_params:
+            article_query = include_filter(request, search_field, related_field, article_query)
+
         serializer = self.get_serializer(article_query, many=True)
         return Response(serializer.data)
     
@@ -26,7 +54,6 @@ class ClubsArticleViewSet(ModelViewSet):
         request.data._mutable = True
         request.data['club_id'] = str(self.kwargs.get('club_pk', ''))
         request.data._mutable = False
-        print(request.data)
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
@@ -41,6 +68,12 @@ class GalleriesViewSet(ModelViewSet):
     @action(detail=True, methods=['GET'])
     def gallery_list(self, request, **kwargs):
         article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
+        search_field = ['title', 'description', 'category']
+        realted_field = ['writer_id']
+        
+        if request.query_params:
+            article_query = include_filter(request, search_field, realted_field, article_query)
+        
         serializer = self.get_serializer(article_query, many=True)
         return Response(serializer.data)
     

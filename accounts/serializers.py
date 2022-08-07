@@ -77,9 +77,9 @@ class LoginSerializer(serializers.ModelSerializer):
         identification = data.get('identification',None)
         password = data.get('password',None)
 
-        if User.objects.filter(identification=identification).exists():
+        if User.objects.filter(identification=identification).exists(): 
             user = User.objects.get(identification=identification)
-            if user.check_password(password):
+            if not user.check_password(password):
                 raise serializers.ValidationError('Check Your Identification or Password')
         
         else:

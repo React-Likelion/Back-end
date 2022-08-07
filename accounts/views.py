@@ -1,6 +1,5 @@
 from .models import User
-from rest_framework import  status, generics
-from rest_framework import status, generics
+from rest_framework import status, generics, views
 from .tokens import account_activation_token
 import traceback
 from rest_framework.response import Response
@@ -49,11 +48,7 @@ class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer
     
     def post(self, request):
-        print('11111111111')
         serializer = self.get_serializer(data=request.data)
-        print('22222222222222222222222')
-        print(serializer)
-        print('22222222222222222222222')
         serializer.is_valid(raise_exception = True)
         token = serializer.validated_data
         return Response({"token":token}, status=status.HTTP_200_OK)

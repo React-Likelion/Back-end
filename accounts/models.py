@@ -34,8 +34,8 @@ class MembersManager(BaseUserManager):
         User.is_admin = True,
         User.is_superuser = True,
         User.is_active = True
-        User.save(using=self._db)        
         User.is_staff = True,
+        User.save(using=self._db)        
         return User
 
 

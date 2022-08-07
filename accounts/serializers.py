@@ -1,11 +1,14 @@
 from .models import Members
 from .tokens import account_activation_token
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.core.mail import EmailMessage
+from django.contrib.auth.models import update_last_login
+from django.contrib.auth import authenticate
 
 class SignupSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -56,8 +59,7 @@ class SignupSerializer(serializers.ModelSerializer):
         email = EmailMessage(mail_subject, message, to=[to_email])
         email.send()
     
-        return validated_data
- 
+        return user
 
 class LoginSerializer(serializers.ModelSerializer):
     identification = serializers.CharField(
@@ -76,22 +78,25 @@ class LoginSerializer(serializers.ModelSerializer):
     def validate(self, data):
         identification = data.get('identification',None)
         password = data.get('password',None)
-
-        if Members.objects.filter(identification=identification).exists():
-            user = Members.objects.get(identification=identification)
-
-            if not user.check_password(password):
-                raise serializers.ValidationError('Check Your Identification or Password')
         
-        else:
-            raise serializers.ValidationError("User does not exist")
-        
+        user = authenticate(**data)
+        if user and user.is_active:   # 이메일 인증 후 로그인 가능
+            if Members.objects.filter(identification=identification).exists():
+                user = Members.objects.get(identification=identification)
+                update_last_login(None, user) ##last_login update
 
-        token = RefreshToken.for_user(user=user)
-        data = {
-            'user' : user.id, 
-            "message": "login successs",
-            'refresh_token' : str(token),
-            'access_token' : str(token.access_token)
-        }
-        return data
+                if not user.check_password(password):
+                    raise serializers.ValidationError('Check Your Identification or Password')
+        
+            else:
+                raise serializers.ValidationError("User does not exist")
+        
+            token = RefreshToken.for_user(user=user)
+            data = {
+                'user' : user.id, 
+                "message": "login successs",
+                'refresh_token' : str(token),
+                'access_token' : str(token.access_token)
+            }   
+            return data
+        raise serializers.ValidationError("Your account is not active")

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class MembersManager(BaseUserManager):
@@ -99,7 +100,7 @@ class Members(AbstractBaseUser):
 
     def __str__(self):
         return str(self.nickname)
-
+        
     class Meta: #모든 모델에 class Meta 넣기
         db_table="members"
 

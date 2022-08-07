@@ -12,8 +12,8 @@ class MembersManager(BaseUserManager):
             email = self.normalize_email(email),
             birth = birth,
             job = job,
-            is_active = True,
-            is_admin = False,
+            is_active = False,
+            is_staff = False,
             is_superuser = False,
         )
         User.set_password(password)
@@ -33,8 +33,9 @@ class MembersManager(BaseUserManager):
         )
         User.is_admin = True,
         User.is_superuser = True,
-        User.save(using=self._db)
-
+        User.is_active = True
+        User.save(using=self._db)        
+        User.is_staff = True,
         return User
 
 
@@ -65,7 +66,7 @@ class User(AbstractBaseUser):
 
     # Member 모델의 필수 field
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
     # 헬퍼 클래스 사용

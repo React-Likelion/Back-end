@@ -22,6 +22,14 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:3000', 'http://localhost:3000', 'http://shinjoeo.s3-website.ap-northeast-2.amazonaws.com')
 CORS_ALLOW_CREDENTIALS = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'kck85075@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+SERVER_EMAIL = 'kck85075@gmail.com'
+DEFAULT_FROM_MAIL = 'kck85075'
 
 # Application definition
 

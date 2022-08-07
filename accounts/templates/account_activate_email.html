@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+{{ user.nickname }}님, 아래 링크를 클릭해 계정을 활성화 해주세요
+http://{{ domain }}{% url 'accounts:activate' uidb64=uid token=token %}
+
+{% endautoescape %}
+
+

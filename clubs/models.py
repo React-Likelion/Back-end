@@ -39,7 +39,7 @@ class Clubs(models.Model):
     image = models.CharField(max_length=100)
 
 
-
+#? 용도를 잘 모르겠습니다.
 class ClubMembers(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE)
@@ -48,14 +48,14 @@ class ClubMembers(models.Model):
 
 class Clubboard(models.Model):
     id = models.BigAutoField(primary_key=True)
-    club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE)
-    writer_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE)
+    club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
+    writer_id= models.ForeignKey("accounts.Members", on_delete=models.CASCADE, db_column='writer_id')
     title = models.TextField()
     description = models.TextField()
     image = models.CharField(max_length=100)
     create_time = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=20)
-    comment_cnt = models.IntegerField()
+    comment_cnt = models.IntegerField(default=0)
 
 
 class Clubboard_comment(models.Model):

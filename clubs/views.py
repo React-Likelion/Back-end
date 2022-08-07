@@ -7,15 +7,30 @@ from .models import *
 from .serializer import *
 
 class ClubsViewSet(ModelViewSet):
-    lookup_field = 'pk'
-    lookup_url_kwarg = 'pk_2'
     queryset = Clubs.objects.all()
     serializer_class = ClubsSerializer
 
-    @action(detail=True)
-    def articles(self, request, pk):
-        board_queryset = Clubboard.objects.filter(clud_id=pk)
-        serializer = self.get_serializer(board_queryset, many=True)
+
+class ClubsArticleViewSet(ModelViewSet):
+    queryset = Clubboard.objects.all()
+    serializer_class = ClubBoardSerializer
+
+    @action(detail=True, methods=['GET'])
+    def article_list(self, request, **kwargs):
+        article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
+        serializer = self.get_serializer(article_query, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['POST'])
+    def article_create(self, request, **kwargs):
+        request.data._mutable = True
+        request.data['club_id'] = str(self.kwargs.get('club_pk', ''))
+        request.data._mutable = False
+        print(request.data)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        serializer.save()        
         return Response(serializer.data)
 
 
@@ -47,6 +62,18 @@ clubs_member_list = ClubsMemberViewSet.as_view({
 })
 
 clubs_detail = ClubsViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy',
+})
+
+clubs_article_list = ClubsArticleViewSet.as_view({
+    'get': 'article_list',
+    'post': 'article_create',
+})
+
+clubs_article_detail = ClubsArticleViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',

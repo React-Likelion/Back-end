@@ -1,4 +1,5 @@
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
 
 
@@ -9,8 +10,8 @@ urlpatterns = [
     path('by-member/', views.clubs_member_list),
     
     path('<int:pk>/', views.clubs_detail), 
-    path('<int:pk>/articles/', views.clubs_detail), 
-    #path('<int:pk>/articles/<int:pk_2>', views.clubs_detail),
+    path('<int:club_pk>/articles/', views.clubs_article_list), 
+    path('<int:club_pk>/articles/<int:pk>', views.clubs_article_detail),
 
     #path('<int:pk>/galleries', views.clubs_detail), 
     #path('<int:pk>/galleries/<int:pk_2>', views.clubs_detail), 

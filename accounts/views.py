@@ -1,5 +1,5 @@
 import traceback
-from .models import Members
+from .models import User
 from .tokens import account_activation_token
 from .serializers import SignupSerializer, LoginSerializer
 
@@ -13,14 +13,14 @@ from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
 
 
-class MembersListView(generics.ListAPIView):
+class UserListView(generics.ListAPIView):
     permission_classes = [AllowAny,]
-    queryset = Members.objects.all()
+    queryset = User.objects.all()
     serializer_class = SignupSerializer
 
 class SignupView(generics.CreateAPIView):
     permission_classes = [AllowAny,]
-    #queryset = Members.objects.all()
+    #queryset = User.objects.all()
     serializer_class = SignupSerializer
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -54,8 +54,8 @@ class UserActivate(views.APIView):
     def get(self, request, uidb64, token):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
-            user = Members.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, Members.DoesNotExist):
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
 
         try:
@@ -67,7 +67,7 @@ class UserActivate(views.APIView):
                return HttpResponse('만료된 링크입니다', status=status.HTTP_400_BAD_REQUEST)
 
         except Exception as e:
-            print(traceback.format_exc())
+            print(traceback.format_exc(e))
 
 class LoginView(generics.GenericAPIView):
     serializer_class = LoginSerializer

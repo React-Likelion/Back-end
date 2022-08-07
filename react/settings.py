@@ -39,10 +39,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'kck85075@gmail.com'
+EMAIL_HOST_USER = 'kathyleesh7@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-SERVER_EMAIL = 'kck85075@gmail.com'
-DEFAULT_FROM_MAIL = 'kck85075'
+SERVER_EMAIL = 'kathyleesh7@gmail.com'
+DEFAULT_FROM_MAIL = 'kathyleesh7'
 
 # Application definition
 
@@ -90,7 +90,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME' : timedelta(hours=2),
     'REFRESH_TOKEN_LIFETIME' : timedelta(days=7),  
     'ROTATE_REFRESH_TOKENS' : False,  # Token 재발급 
-    'TOKEN_USER_CLASS' : 'members.Members',
+    'TOKEN_USER_CLASS' : 'User.User',
 }
 
 MIDDLEWARE = [
@@ -129,7 +129,7 @@ WSGI_APPLICATION = 'react.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-AUTH_USER_MODEL = 'accounts.Members'
+AUTH_USER_MODEL = 'accounts.User'
 
 DATABASES = {
     'default': {

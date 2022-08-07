@@ -1,4 +1,4 @@
-from .models import Members
+from .models import User
 from .tokens import account_activation_token
 from rest_framework import serializers, status
 from rest_framework.response import Response
@@ -21,7 +21,7 @@ class SignupSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only = True, required=True)
     
     class Meta:
-        model = Members
+        model = User
         fields = '__all__'
     
     def validate(self, data):
@@ -33,7 +33,7 @@ class SignupSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        user = Members.objects.create(
+        user = User.objects.create(
             identification = validated_data['identification'],
             name = validated_data['name'],
             nickname = validated_data['nickname'],
@@ -72,7 +72,7 @@ class LoginSerializer(serializers.ModelSerializer):
         style= {'input_type' : 'password'}
     )
     class Meta(object):
-        model = Members
+        model = User
         fields = ('identification', 'password')
 
     def validate(self, data):
@@ -81,8 +81,8 @@ class LoginSerializer(serializers.ModelSerializer):
         
         user = authenticate(**data)
         if user and user.is_active:   # 이메일 인증 후 로그인 가능
-            if Members.objects.filter(identification=identification).exists():
-                user = Members.objects.get(identification=identification)
+            if User.objects.filter(identification=identification).exists():
+                user = User.objects.get(identification=identification)
                 update_last_login(None, user) ##last_login update
 
                 if not user.check_password(password):

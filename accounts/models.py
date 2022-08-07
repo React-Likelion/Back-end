@@ -3,7 +3,7 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-class MembersManager(BaseUserManager):
+class UserManager(BaseUserManager):
     # 일반 user 생성
     def create_user(self, identification, name, nickname, password, email, birth, job):
         if not identification:
@@ -18,7 +18,7 @@ class MembersManager(BaseUserManager):
             raise ValueError('must have member birth')
         if not job:
             raise ValueError('must have member job')
-        members = self.model(
+        User = self.model(
             identification = identification,
             name = name,
             nickname = nickname,
@@ -30,14 +30,14 @@ class MembersManager(BaseUserManager):
             is_staff = False,
             is_superuser = False,
         )
-        members.set_password(password)
-        members.save(using=self._db)
+        User.set_password(password)
+        User.save(using=self._db)
 
-        return members
+        return User
         
     # 관리자 user 생성
-    def create_superuser(self, identification, name, nickname, password, email, birth, job, ):
-        members = self.create_user(
+    def create_superuser(self, identification, name, nickname, password, email, birth, job):
+        User = self.create_user(
             identification = identification,
             name = name,
             nickname = nickname,
@@ -46,12 +46,12 @@ class MembersManager(BaseUserManager):
             birth = birth,
             job = job,
         )
-        members.is_active = True
-        members.is_staff = True,
-        members.is_superuser = True,
-        members.save(using=self._db)
+        User.is_active = True
+        User.is_staff = True,
+        User.is_superuser = True,
+        User.save(using=self._db)
 
-        return members
+        return User
 
 
 JOB_CHOICES = [
@@ -65,9 +65,10 @@ JOB_CHOICES = [
     ('8', '장치 기계 조작 및 조립 종사자'),
     ('9', '단순 노무 종사자'),
     ('10', '군인 및 학생'),
+    ('11', '없음')
 ]
 
-class Members(AbstractBaseUser):
+class User(AbstractBaseUser):
     #id = models.BigAutoField(primary_key=True)
     identification = models.CharField(max_length=11, unique=True)
     name = models.CharField(max_length=11)
@@ -79,13 +80,13 @@ class Members(AbstractBaseUser):
     date_joined = models.DateTimeField(auto_now_add=True) 
     #last_login = models.DateTimeField(auto_now_add=True) 
 
-    # Member 모델의 필수 field
+    # User 모델의 필수 field
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
 
     # 헬퍼 클래스 사용
-    objects = MembersManager()
+    objects = UserManager()
 
     # 사용자의 username field는 identification으로 설정
     USERNAME_FIELD = 'identification'
@@ -102,7 +103,7 @@ class Members(AbstractBaseUser):
         return str(self.nickname)
         
     class Meta: #모든 모델에 class Meta 넣기
-        db_table="members"
+        db_table="User"
 
 
 

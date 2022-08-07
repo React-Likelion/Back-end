@@ -34,6 +34,29 @@ class ClubsArticleViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
+class GalleriesViewSet(ModelViewSet):
+    queryset = Galleries.objects.all()
+    serializer_class = GalleriesSerializer
+
+    @action(detail=True, methods=['GET'])
+    def gallery_list(self, request, **kwargs):
+        article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
+        serializer = self.get_serializer(article_query, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['POST'])
+    def gallery_create(self, request, **kwargs):
+        request.data._mutable = True
+        request.data['club_id'] = str(self.kwargs.get('club_pk', ''))
+        request.data._mutable = False
+        print(request.data)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid()
+        serializer.save()        
+        return Response(serializer.data)
+
+
 
 class ClubsNewViewSet(ModelViewSet):
     queryset = Clubs.objects.all().order_by('-id')
@@ -74,6 +97,18 @@ clubs_article_list = ClubsArticleViewSet.as_view({
 })
 
 clubs_article_detail = ClubsArticleViewSet.as_view({
+    'get': 'retrieve',
+    'put': 'update',
+    'patch': 'partial_update',
+    'delete': 'destroy',
+})
+
+clubs_galleries_list = GalleriesViewSet.as_view({
+    'get': 'gallery_list',
+    'post': 'gallery_create',
+})
+
+clubs_galleries_detail = GalleriesViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',

@@ -11,8 +11,8 @@ urlpatterns = [
     
     path('<int:pk>/', views.clubs_detail), 
     path('<int:club_pk>/articles/', views.clubs_article_list), 
-    path('<int:club_pk>/articles/<int:pk>', views.clubs_article_detail),
+    path('<int:club_pk>/articles/<int:pk>/', views.clubs_article_detail),
 
-    #path('<int:pk>/galleries', views.clubs_detail), 
-    #path('<int:pk>/galleries/<int:pk_2>', views.clubs_detail), 
+    path('<int:club_pk>/galleries/', views.clubs_galleries_list), 
+    path('<int:club_pk>/galleries/<int:pk>/', views.clubs_galleries_detail), 
 ]

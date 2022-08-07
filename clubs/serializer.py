@@ -14,3 +14,9 @@ class ClubBoardSerializer(ModelSerializer):
         model = Clubboard
         fields = '__all__'
         read_only_fields = ['comment_cnt']
+
+
+class GalleriesSerializer(ModelSerializer):
+    class Meta:
+        model = Galleries
+        fields = '__all__'

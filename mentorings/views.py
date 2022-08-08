@@ -54,4 +54,4 @@ class Locations_ViewSet(viewsets.ModelViewSet):
     queryset=models.locations.objects.all()
     serializer_class=serializers.LocationsSerializers 
 
-#test
+#test1

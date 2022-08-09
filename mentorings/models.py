@@ -5,6 +5,7 @@ from accounts.models import User
 class mentorings(models.Model):
     #locations에서 foreign키
     user_id=models.ForeignKey(User,on_delete=models.CASCADE, db_column="user_id",null=True);
+    nickname=models.CharField(max_length=255, null=True, blank=False)
     location=models.ForeignKey("locations",on_delete=models.CASCADE, db_column="location_id");
     #fields에서 foreign키
     field=models.CharField(max_length=255, null=True, blank=False);
@@ -16,7 +17,7 @@ class mentorings(models.Model):
     limit=models.IntegerField(default=0,null=True, blank=False);
     tag=models.CharField(max_length=255, null=True, blank=False);
     image=models.CharField(max_length=255, null=True, blank=False);
-    
+    create_date=models.DateTimeField(auto_now_add=True);
     #member와 ManytoMany연결
     User=models.ManyToManyField(User, through='mentoringsTouser', related_name='Member');
     member_cnt=models.IntegerField(default=0, null=True, blank=False);
@@ -29,6 +30,7 @@ class mentoringsTouser(models.Model):
     
 class mentoring_chats(models.Model):
     user_id=models.ForeignKey(User,on_delete=models.CASCADE, db_column="user_id",null=True);
+    nickname=models.CharField(max_length=255, null=True, blank=False)
     description=models.TextField(null=True, blank=False);
     create_date=models.DateTimeField(auto_now_add=True);
     mentorings_id=models.ForeignKey("mentorings", on_delete=models.CASCADE, db_column="mentorings_id")

@@ -6,7 +6,7 @@ class mentorings(models.Model):
     #locations에서 foreign키
     user_id=models.ForeignKey(User,on_delete=models.CASCADE, db_column="user_id",null=True);
     nickname=models.CharField(max_length=255, null=True, blank=False)
-    location=models.ForeignKey("locations",on_delete=models.CASCADE, db_column="location_id");
+    location=models.ForeignKey("locations",on_delete=models.CASCADE, db_column="location_id", null=True);
     #fields에서 foreign키
     field=models.CharField(max_length=255, null=True, blank=False);
     
@@ -16,7 +16,7 @@ class mentorings(models.Model):
     age_group=models.IntegerField(null=True, blank=False);
     limit=models.IntegerField(default=0,null=True, blank=False);
     tag=models.CharField(max_length=255, null=True, blank=False);
-    image=models.CharField(max_length=255, null=True, blank=False);
+    image = models.ImageField(upload_to="%Y/%m/%d")
     create_date=models.DateTimeField(auto_now_add=True);
     #member와 ManytoMany연결
     User=models.ManyToManyField(User, through='mentoringsTouser', related_name='Member');

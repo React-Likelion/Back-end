@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     'mentorings',
 ]
 
+#미디어 루트 관리
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 REST_FRAMEWORK = {

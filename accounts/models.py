@@ -66,11 +66,11 @@ JOB_CHOICES = [
 ]
 
 class Members(AbstractBaseUser):
-    #id = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     identification = models.CharField(max_length=11, unique=True)
     name = models.CharField(max_length=11)
     nickname = models.CharField(unique=True, max_length=11)
-    #password = models.CharField(max_length=20, unique=True)
+    password = models.CharField(max_length=20)
     email = models.EmailField(max_length=254, unique=True)
     birth = models.DateField(auto_now_add=False)
     job = models.CharField(max_length=2, choices=JOB_CHOICES)

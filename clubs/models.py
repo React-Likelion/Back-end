@@ -38,6 +38,9 @@ class Clubs(models.Model):
     member = models.ManyToManyField(Members, related_name='member')
     image = models.CharField(max_length=100)
 
+    def member_cnt(self):
+        return self.member.all().count()
+
 
 #? 용도를 잘 모르겠습니다.
 class ClubMembers(models.Model):

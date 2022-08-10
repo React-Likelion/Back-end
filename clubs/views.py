@@ -5,6 +5,8 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import filters
+from rest_framework import status
+from accounts.models import Members
 from .models import *
 from .serializer import *
 
@@ -31,6 +33,25 @@ class ClubsViewSet(ModelViewSet):
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
+    
+    @action(detail=True, method=['POST'])
+    def club_signin(self, request, **kwargs):
+        club = self.queryset.filter(id=self.kwargs.get('pk'))[0]
+        
+        sign_id = request.query_params.get('id', None)
+        member_list = club.member.all()
+
+        if sign_id is None or Members.objects.get(id=sign_id) in member_list:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        if club.member_cnt() >= club.limit:
+            content = {'error': 'club is already full!'}
+            return Response(content, status=status.HTTP_403_FORBIDDEN)
+        club.member.add(request.query_params.get('id'))
+        club.save()
+
+        content = {'ok': 'singin complete!'}
+        return Response(content, status=status.HTTP_200_OK)
 
 
 class ClubsArticleViewSet(ModelViewSet):
@@ -122,6 +143,8 @@ clubs_detail = ClubsViewSet.as_view({
     'put': 'update',
     'patch': 'partial_update',
     'delete': 'destroy',
+
+    'post': 'club_signin'
 })
 
 clubs_article_list = ClubsArticleViewSet.as_view({

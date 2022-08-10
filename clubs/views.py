@@ -13,22 +13,12 @@ from .models import *
 from .serializer import *
 
 
-def include_filter(request, include_field, related_field, queryset):
-    filter_list = {}
-    
-    for i in include_field:
-        filter = request.query_params.get(i, None)
-        if filter is None: continue
-        
-        filter_list[f"{i}__regex"] = rf".*{filter}.*"
-    
-    for i in related_field:
-        filter = request.query_params.get(i, None)
-        if filter is None: continue
-        
-        filter_list[i] = filter
-    
-    return queryset.filter(**filter_list)
+def include_filter(queryset, request):
+    for key, val in request.items():
+        queryset = queryset.filter(**{f"{key}__contains":val})
+
+    print(queryset)
+    return queryset
 
 class ClubsViewSet(ModelViewSet):
     queryset = Clubs.objects.all()
@@ -47,26 +37,32 @@ class ClubsViewSet(ModelViewSet):
         if sign_id is None:
             content = {'error': 'none_id'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
-
-        if Members.objects.get(id=sign_id) in member_list:
-            if sign_out is None:
-                content = {'error': 'already signed!'}
-                return Response(content, status=status.HTTP_403_FORBIDDEN)
-            else:
+        
+        if sign_out is not None:
+            if Members.objects.get(id=sign_id) in member_list:
                 club.member.remove(request.query_params.get('id'))
                 content = {'ok': 'signout complete!'}
                 return Response(content, status=status.HTTP_200_OK)
+            
+            else:
+                content = {'error': 'not register in club!'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
 
-        if club.member_cnt() >= club.limit:
-            content = {'error': 'club is already full!'}
-            return Response(content, status=status.HTTP_403_FORBIDDEN)
-        club.member.add(request.query_params.get('id'))
-        club.save()
+        else:
+            if Members.objects.get(id=sign_id) in member_list:
+                content = {'error': 'already signed!'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
+            
+            if club.member_cnt() >= club.limit:
+                content = {'error': 'club is already full!'}
+                return Response(content, status=status.HTTP_403_FORBIDDEN)
+            
+            club.member.add(request.query_params.get('id'))
+            club.save()
 
-        content = {'ok': 'singin complete!'}
-        return Response(content, status=status.HTTP_200_OK)
+            content = {'ok': 'singin complete!'}
+            return Response(content, status=status.HTTP_200_OK)
     
-
 
 class ClubsArticleViewSet(ModelViewSet):
     queryset = Clubboard.objects.all()
@@ -75,11 +71,10 @@ class ClubsArticleViewSet(ModelViewSet):
     @action(detail=True, methods=['GET'])
     def article_list(self, request, **kwargs):
         article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
-        search_field = ['title', 'description', 'category']
-        related_field = ['writer_id']
 
         if request.query_params:
-            article_query = include_filter(request, search_field, related_field, article_query)
+            print(request.query_params)
+            article_query = include_filter(article_query, request.query_params)
 
         serializer = self.get_serializer(article_query, many=True)
         return Response(serializer.data)
@@ -109,12 +104,10 @@ class GalleriesViewSet(ModelViewSet):
     @action(detail=True, methods=['GET'])
     def gallery_list(self, request, **kwargs):
         article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
-        search_field = ['title', 'description', 'category']
-        realted_field = ['writer_id']
         
         if request.query_params:
-            article_query = include_filter(request, search_field, realted_field, article_query)
-        
+            article_query = include_filter(article_query, request.query_params)
+
         serializer = self.get_serializer(article_query, many=True)
         return Response(serializer.data)
     

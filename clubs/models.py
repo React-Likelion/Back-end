@@ -31,8 +31,8 @@ class Clubs(models.Model):
     leader_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE, related_name='leader')
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
-    field = models.CharField(max_length=2, choices=FIELDS)
-    location = models.CharField(max_length=2, choices=LOCATIIONS)
+    field = models.CharField(max_length=20, choices=FIELDS)
+    location = models.CharField(max_length=20, choices=LOCATIIONS)
     age_group = models.CharField(max_length=20)
     limit = models.IntegerField()
     member = models.ManyToManyField(Members, related_name='member')
@@ -67,7 +67,7 @@ class Clubboard_comment(models.Model):
     create_time = models.DateTimeField(auto_now_add=True)
     writer_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE)
     board_id = models.ForeignKey("Clubboard", on_delete=models.CASCADE)
-    comment_id = models.ForeignKey("Clubboard_comment", on_delete=models.CASCADE)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
 
 class Galleries(models.Model):

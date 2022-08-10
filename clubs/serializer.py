@@ -20,3 +20,9 @@ class GalleriesSerializer(ModelSerializer):
     class Meta:
         model = Galleries
         fields = '__all__'
+
+
+class CommentSerializer(ModelSerializer):
+    class Meta:
+        model = Clubboard_comment
+        fields = '__all__'

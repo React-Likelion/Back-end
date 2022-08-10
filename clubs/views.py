@@ -65,6 +65,7 @@ class ClubsViewSet(ModelViewSet):
 
         content = {'ok': 'singin complete!'}
         return Response(content, status=status.HTTP_200_OK)
+    
 
 
 class ClubsArticleViewSet(ModelViewSet):
@@ -92,6 +93,12 @@ class ClubsArticleViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         serializer.save()        
+        return Response(serializer.data)
+    
+    @action(detail=True, methods=['GET'])
+    def get_article(self, request, **kwargs):
+        comment = self.queryset.filter(id=self.kwargs.get('pk'), club_id=self.kwargs.get('club_pk'))[0]
+        serializer = self.get_serializer(comment)
         return Response(serializer.data)
 
 
@@ -141,7 +148,7 @@ class CommentViewSet(ModelViewSet):
     
     @action(detail=True, methods=['GET'])
     def get_comment_list(self, request, **kwargs):
-        comment = self.queryset.filter(board_id=self.kwargs.get('pk'))
+        comment = self.queryset.filter(board_id=self.kwargs.get('pk'), parent=None)
         serializer = self.get_serializer(comment, many=True)
         return Response(serializer.data)
     
@@ -201,7 +208,7 @@ clubs_article_list = ClubsArticleViewSet.as_view({
 })
 
 clubs_article_detail = ClubsArticleViewSet.as_view({
-    'get': 'retrieve',
+    'get': 'get_article',
     'put': 'update',
     'patch': 'partial_update',
     'delete': 'destroy',

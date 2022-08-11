@@ -1,5 +1,8 @@
+<<<<<<< HEAD
+=======
 from email.mime import image
 from importlib.resources import path
+>>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
 from .models import User
 from .tokens import account_activation_token
 from rest_framework import serializers, status
@@ -81,6 +84,17 @@ class LoginSerializer(serializers.ModelSerializer):
     def validate(self, data):
         identification = data.get('identification',None)
         password = data.get('password',None)
+<<<<<<< HEAD
+
+        if User.objects.filter(identification=identification).exists(): 
+            user = User.objects.get(identification=identification)
+            if not user.check_password(password):
+                raise serializers.ValidationError('Check Your Identification or Password')
+        
+        else:
+            raise serializers.ValidationError("User does not exist")
+=======
+>>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
         
         user = authenticate(**data)
         if user and user.is_active:   # 이메일 인증 후 로그인 가능

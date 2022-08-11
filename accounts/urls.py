@@ -1,9 +1,11 @@
 from django.urls import path, include
-from . import views
-from rest_framework import routers
 from rest_framework_simplejwt.views import TokenRefreshView
+<<<<<<< HEAD
+from accounts.views import MembersListView, SignupView, UserActivate, LoginView
+=======
 
 from accounts.views import UserListView, SignupView, UserActivate, LoginView
+>>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
 
 #router = routers.DefaultRouter()
 #router.register(r'signup', SignupViewSet)

@@ -7,8 +7,6 @@ from drf_yasg import openapi
 from django.conf.urls.static import static
 from django.conf import settings
 
-
-
 #스웨거 적용 내용
 schema_view = get_schema_view(
     openapi.Info(
@@ -29,11 +27,10 @@ urlpatterns = [
     re_path(r'redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc-v1'),
 
     path('admin/', admin.site.urls),
+    path('mentorings/',include('mentorings.urls')),
     path('clubs/', include('clubs.urls')),
     path('accounts/', include('accounts.urls')),
     path('lectures/', include('lectures.urls')),
     path('community/', include('community.urls')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

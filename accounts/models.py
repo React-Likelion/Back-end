@@ -7,6 +7,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 class UserManager(BaseUserManager):
     # 일반 user 생성
     def create_user(self, identification, name, nickname, password, email, birth, job):
+<<<<<<< HEAD
+=======
         if not identification:
             raise ValueError('must have member identification')
         if not name:
@@ -20,11 +22,11 @@ class UserManager(BaseUserManager):
         if not job:
             raise ValueError('must have member job')
 
+>>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
         User = self.model(
             identification = identification,
             name = name,
             nickname = nickname,
-            password = password, 
             email = self.normalize_email(email),
             birth = birth,
             job = job,
@@ -33,13 +35,14 @@ class UserManager(BaseUserManager):
             is_admin = False,
             is_superuser = False,
         )
-        members.set_password(password)
-        members.save(using=self._db)
-
-        return members
+        User.set_password(password)
+        User.save(using=self._db)
+        return User
         
     # 관리자 user 생성
     def create_superuser(self, identification, name, nickname, password, email, birth, job, ):
+<<<<<<< HEAD
+=======
         members = self.create_user(
 
             is_active = False,
@@ -53,6 +56,7 @@ class UserManager(BaseUserManager):
         
     # 관리자 user 생성
     def create_superuser(self, identification, name, nickname, password, email, birth, job):
+>>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
         User = self.create_user(
             identification = identification,
             name = name,
@@ -62,12 +66,20 @@ class UserManager(BaseUserManager):
             birth = birth,
             job = job,
         )
+<<<<<<< HEAD
+        User.is_admin = True,
+        User.is_superuser = True,
+        User.is_active = True
+        User.is_staff = True,
+        User.save(using=self._db)        
+=======
 
         User.is_active = True
         User.is_staff = True,
         User.is_superuser = True,
         User.save(using=self._db)
 
+>>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
         return User
 
 
@@ -124,4 +136,9 @@ class User(AbstractBaseUser):
         
     class Meta: #모든 모델에 class Meta 넣기
         db_table="User"
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
 

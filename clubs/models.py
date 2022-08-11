@@ -54,7 +54,7 @@ class Clubs(models.Model):
     age_group = models.CharField(max_length=20)
     limit = models.IntegerField()
     member = models.ManyToManyField(User, related_name='member')
-    image = models.CharField(max_length=100)
+    image = models.ImageField(blank=True, upload_to="clubs/", null=True)
 
     def member_cnt(self):
         return self.member.all().count()
@@ -73,7 +73,7 @@ class Clubboard(models.Model):
     writer_id= models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
     title = models.TextField()
     description = models.TextField()
-    image = models.CharField(max_length=100)
+    image = models.ImageField(blank=True, upload_to="clubs/", null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=20)
     comment_cnt = models.IntegerField(default=0)
@@ -93,5 +93,5 @@ class Galleries(models.Model):
     club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
     writer_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
     title = models.CharField(max_length=20)
-    image = models.CharField(max_length=100)
+    image = models.ImageField(blank=True, upload_to="clubs/", null=True)
     upload_time = models.DateTimeField(auto_now_add=True)

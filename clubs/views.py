@@ -146,7 +146,7 @@ class CommentViewSet(ModelViewSet):
     
     @action(detail=True, methods=['GET'])
     def get_comment_list(self, request, **kwargs):
-        comment = self.queryset.filter(board_id=self.kwargs.get('pk'), parent=None)
+        comment = self.queryset.filter(board_id=self.kwargs.get('pk'))
         serializer = self.get_serializer(comment, many=True)
         return Response(serializer.data)
     

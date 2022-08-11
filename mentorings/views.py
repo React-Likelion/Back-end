@@ -1,29 +1,56 @@
-from unittest.mock import patch
-from urllib import response
 from mentorings import models, serializers
 from accounts.models import User
 from mentorings.models import mentorings, mentoring_chats
 from rest_framework import viewsets
 from rest_framework.response import Response
-from django_filters.rest_framework import DjangoFilterBackend
+#from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.shortcuts import redirect
+from django.db.models import Q
 
 #멘토링 CRUD
 class MentoringViewSet(viewsets.ModelViewSet):
     queryset=mentorings.objects.all().order_by('-create_date')
     serializer_class=serializers.MentoringSerializers
-    # permission_classes=[IsAuthenticated]
-    filter_backends=[DjangoFilterBackend]
-    filterset_fields=['title', 'age_group', 'location', 'field']
+    permission_classes=[IsAuthenticatedOrReadOnly]
+    # filter_backends=[DjangoFilterBackend]
+    # filterset_fields=['title', 'age_group', 'location', 'field']
 
+    def get_queryset(self):
+        queryset=mentorings.objects.all()
+        location=self.request.GET.getlist('location',None)
+        limit=self.request.GET.getlist('limit',None)
+        age_group=self.request.GET.getlist('age_group',None)
+        field=self.request.GET.getlist('field',None)
+        title=self.request.GET.get('title',None)
+        
+        filter_condition = Q()
+
+        if location:
+            filter_condition.add(Q(location__in=location), Q.AND)
+
+        if limit:
+            filter_condition.add(Q(limit__in=limit), Q.AND)
+
+        if age_group:
+            filter_condition.add(Q(age_group__in=age_group), Q.AND)
+        
+        if field:
+            filter_condition.add(Q(field__in=field), Q.AND)
+
+        if title:
+            filter_condition.add(Q(title=title), Q.AND)
+
+        queryset = queryset.filter(filter_condition).distinct().order_by('-create_date')
+        return queryset
+    
     def perform_create(self, serializer):
         serializer.save(user_id=self.request.user)
         serializer.save(member_cnt=1)
-        serializer.save(nickname=self.request.user.nickname)
+        serializer.save(nickname=self.request.user.nickname)                
         
     @action(detail=False)    
     def listbycnt(self, request, *args, **kwargs):

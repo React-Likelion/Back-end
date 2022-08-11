@@ -2,7 +2,7 @@ from django.db import models
 
 from accounts.models import Members
 
-FIELDS = [
+JOB_CHOICES = [
     ('관리자', '관리자'),
     ('전문가 및 관련 종사자', '전문가 및 관련 종사자'),
     ('사무 종사자', '사무 종사자'),
@@ -13,6 +13,7 @@ FIELDS = [
     ('장치 기계 조작 및 조립 종사자', '장치 기계 조작 및 조립 종사자'),
     ('단순 노무 종사자', '단순 노무 종사자'),
     ('군인 및 학생', '군인 및 학생'),
+    ('없음', '없음')
 ]
 
 CATEGORY = [

@@ -2,7 +2,13 @@
 # Created by https://www.toptal.com/developers/gitignore/api/django
 # Edit at https://www.toptal.com/developers/gitignore?templates=django
 
+
+.idea
+.idea/*.xml
+.env
 ### Django ###
+migrations/
+
 myvenv
 *.log
 *.pot
@@ -11,6 +17,7 @@ __pycache__/
 my_setting.py
 db.sqlite3
 db.sqlite3-journal
+mydatabase
 media
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/

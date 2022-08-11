@@ -14,6 +14,7 @@ import os
 import os, json
 from dotenv import load_dotenv
 from pathlib import Path
+from datetime import timedelta
 
 load_dotenv()
 
@@ -34,6 +35,14 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:3000', 'http://localhost:3000', 'http://shinjoeo.s3-website.ap-northeast-2.amazonaws.com')
 CORS_ALLOW_CREDENTIALS = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'kathyleesh7@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+SERVER_EMAIL = 'kathyleesh7@gmail.com'
+DEFAULT_FROM_MAIL = 'kathyleesh7'
 
 # Application definition
 
@@ -47,6 +56,7 @@ INSTALLED_APPS = [
 
     # Installed Packages
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_yasg',
     'corsheaders',
 
@@ -60,13 +70,27 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
+
     'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
         'rest_framework.permissions.AllowAny',
     ],
 
+}
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+REST_USE_JWT = True
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME' : timedelta(hours=2),
+    'REFRESH_TOKEN_LIFETIME' : timedelta(days=7),  
+    'ROTATE_REFRESH_TOKENS' : False,  # Token 재발급 
+    'TOKEN_USER_CLASS' : 'User.User',
 }
 
 MIDDLEWARE = [
@@ -105,7 +129,9 @@ WSGI_APPLICATION = 'react.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-"""DATABASES = {
+AUTH_USER_MODEL = 'accounts.User'
+
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'REACTDB',
@@ -114,13 +140,7 @@ WSGI_APPLICATION = 'react.wsgi.application'
         'PORT': '3306',
         'PASSWORD' : os.environ.get("DB_PASSWORD"),
     }
-}"""
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }}
+}
 
 
 # Password validation

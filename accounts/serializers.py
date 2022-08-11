@@ -102,4 +102,4 @@ class LoginSerializer(serializers.ModelSerializer):
                 'access_token' : str(token.access_token)
             }   
             return data
-        raise serializers.ValidationError("아이디 또는 비밀번호를 확인해주세요.")
+        raise serializers.ValidationError("계정이 활성화 전입니다. 계정을 활성화하세요.")

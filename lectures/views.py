@@ -11,7 +11,7 @@ from accounts.models import User
 
 
 class LecturesViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny,]
+    #permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 
@@ -55,7 +55,7 @@ class LecturesViewSet(viewsets.ModelViewSet):
         
 
 class LecturesEnrollViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny,]
+    #permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 
@@ -79,7 +79,7 @@ class LecturesEnrollViewSet(viewsets.ModelViewSet):
         return Response({"message": "success"}, status=status.HTTP_202_ACCEPTED)
 
 class LecturesLikeViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny,]
+    #permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 

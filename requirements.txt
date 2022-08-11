@@ -29,4 +29,4 @@ tzdata==2022.1
 uritemplate==4.1.1
 urllib3==1.26.11
 wincertstore==0.2
-windows-curses==2.3.0
+

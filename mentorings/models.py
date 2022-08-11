@@ -58,10 +58,4 @@ class mentoring_chats(models.Model):
     description=models.TextField(null=True, blank=False);
     create_date=models.DateTimeField(auto_now_add=True);
     mentorings_id=models.ForeignKey("mentorings", on_delete=models.CASCADE, db_column="mentorings_id")
-    
-    
-class locations(models.Model):
-    location=models.CharField(max_length=255, null=True, blank=False)
-    
-    def __str__(self):
-        return self.location
+

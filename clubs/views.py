@@ -32,8 +32,8 @@ class ClubsViewSet(ModelViewSet):
     def club_signin(self, request, **kwargs):
         club = self.queryset.filter(id=self.kwargs.get('pk'))[0]
         
-        sign_id = request.query_params.get('id', None)
-        sign_out = request.query_params.get('out', None)
+        sign_id = request.data.get('id', None)
+        sign_out = request.data.get('out', None)
         member_list = club.member.all()
 
         if sign_id is None:
@@ -42,7 +42,7 @@ class ClubsViewSet(ModelViewSet):
         
         if sign_out is not None:
             if User.objects.get(id=sign_id) in member_list:
-                club.member.remove(request.query_params.get('id'))
+                club.member.remove(request.data.get('id'))
                 content = {'ok': 'signout complete!'}
                 return Response(content, status=status.HTTP_200_OK)
             
@@ -59,7 +59,7 @@ class ClubsViewSet(ModelViewSet):
                 content = {'error': 'club is already full!'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
             
-            club.member.add(request.query_params.get('id'))
+            club.member.add(request.data.get('id'))
             club.save()
 
             content = {'ok': 'singin complete!'}

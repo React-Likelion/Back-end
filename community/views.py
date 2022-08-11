@@ -18,12 +18,12 @@ class CommunityCommentsViewset(viewsets.ModelViewSet):
     queryset = CommunityComments.objects.all()
     serializer_class = CommunityCommentsSerializers
 
-    def perform_create(self, serializer):
+"""     def perform_create(self, serializer):
         print(self.request.board_id)
         #cnt = Community.objects.get(id = pk)
         #print(cnt)
         #cnt.comment_cnt += 1
         #scnt.save()
         return super().perform_create(serializer)
-
+ """
     

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
@@ -18,6 +19,7 @@ class UserManager(BaseUserManager):
             raise ValueError('must have member birth')
         if not job:
             raise ValueError('must have member job')
+
         User = self.model(
             identification = identification,
             name = name,
@@ -26,6 +28,20 @@ class UserManager(BaseUserManager):
             email = self.normalize_email(email),
             birth = birth,
             job = job,
+            
+            is_active = True,
+            is_admin = False,
+            is_superuser = False,
+        )
+        members.set_password(password)
+        members.save(using=self._db)
+
+        return members
+        
+    # 관리자 user 생성
+    def create_superuser(self, identification, name, nickname, password, email, birth, job, ):
+        members = self.create_user(
+
             is_active = False,
             is_staff = False,
             is_superuser = False,
@@ -46,6 +62,7 @@ class UserManager(BaseUserManager):
             birth = birth,
             job = job,
         )
+
         User.is_active = True
         User.is_staff = True,
         User.is_superuser = True,
@@ -73,7 +90,7 @@ class User(AbstractBaseUser):
     identification = models.CharField(max_length=11, unique=True)
     name = models.CharField(max_length=11)
     nickname = models.CharField(unique=True, max_length=11)
-    #password = models.CharField(min_length=6, max_length=20, unique=True)
+    #password = models.CharField(max_length=20, unique=True)
     email = models.EmailField(max_length=254, unique=True)
     birth = models.DateField(auto_now_add=False)
     job = models.CharField(max_length=2, choices=JOB_CHOICES)
@@ -107,6 +124,4 @@ class User(AbstractBaseUser):
         
     class Meta: #모든 모델에 class Meta 넣기
         db_table="User"
-
-
 

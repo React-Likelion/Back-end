@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path, re_path, include
+
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -28,8 +29,11 @@ urlpatterns = [
     re_path(r'redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc-v1'),
 
     path('admin/', admin.site.urls),
+    path('clubs/', include('clubs.urls')),
     path('accounts/', include('accounts.urls')),
     path('lectures/', include('lectures.urls')),
     path('community/', include('community.urls')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

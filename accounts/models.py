@@ -1,15 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-<<<<<<< HEAD
 
-
-class MembersManager(BaseUserManager):
-=======
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class UserManager(BaseUserManager):
->>>>>>> 29d0a43e585ed17fca9b6160efedd808c740da5f
     # 일반 user 생성
     def create_user(self, identification, name, nickname, password, email, birth, job):
         if not identification:
@@ -24,11 +19,8 @@ class UserManager(BaseUserManager):
             raise ValueError('must have member birth')
         if not job:
             raise ValueError('must have member job')
-<<<<<<< HEAD
-        members = self.model(
-=======
+
         User = self.model(
->>>>>>> 29d0a43e585ed17fca9b6160efedd808c740da5f
             identification = identification,
             name = name,
             nickname = nickname,
@@ -36,7 +28,7 @@ class UserManager(BaseUserManager):
             email = self.normalize_email(email),
             birth = birth,
             job = job,
-<<<<<<< HEAD
+            
             is_active = True,
             is_admin = False,
             is_superuser = False,
@@ -49,7 +41,7 @@ class UserManager(BaseUserManager):
     # 관리자 user 생성
     def create_superuser(self, identification, name, nickname, password, email, birth, job, ):
         members = self.create_user(
-=======
+
             is_active = False,
             is_staff = False,
             is_superuser = False,
@@ -62,7 +54,6 @@ class UserManager(BaseUserManager):
     # 관리자 user 생성
     def create_superuser(self, identification, name, nickname, password, email, birth, job):
         User = self.create_user(
->>>>>>> 29d0a43e585ed17fca9b6160efedd808c740da5f
             identification = identification,
             name = name,
             nickname = nickname,
@@ -71,20 +62,13 @@ class UserManager(BaseUserManager):
             birth = birth,
             job = job,
         )
-<<<<<<< HEAD
-        members.is_admin = True,
-        members.is_superuser = True,
-        members.save(using=self._db)
 
-        return members
-=======
         User.is_active = True
         User.is_staff = True,
         User.is_superuser = True,
         User.save(using=self._db)
 
         return User
->>>>>>> 29d0a43e585ed17fca9b6160efedd808c740da5f
 
 
 JOB_CHOICES = [
@@ -98,16 +82,6 @@ JOB_CHOICES = [
     ('8', '장치 기계 조작 및 조립 종사자'),
     ('9', '단순 노무 종사자'),
     ('10', '군인 및 학생'),
-<<<<<<< HEAD
-]
-
-class Members(AbstractBaseUser):
-    id = models.BigAutoField(primary_key=True)
-    identification = models.CharField(max_length=11, unique=True)
-    name = models.CharField(max_length=11)
-    nickname = models.CharField(unique=True, max_length=11)
-    password = models.CharField(max_length=20)
-=======
     ('11', '없음')
 ]
 
@@ -117,22 +91,15 @@ class User(AbstractBaseUser):
     name = models.CharField(max_length=11)
     nickname = models.CharField(unique=True, max_length=11)
     #password = models.CharField(max_length=20, unique=True)
->>>>>>> 29d0a43e585ed17fca9b6160efedd808c740da5f
     email = models.EmailField(max_length=254, unique=True)
     birth = models.DateField(auto_now_add=False)
     job = models.CharField(max_length=2, choices=JOB_CHOICES)
     date_joined = models.DateTimeField(auto_now_add=True) 
     #last_login = models.DateTimeField(auto_now_add=True) 
 
-<<<<<<< HEAD
-    # Member 모델의 필수 field
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
+    #point
+    point = models.IntegerField(default=10000)
 
-    # 헬퍼 클래스 사용
-    objects = MembersManager()
-=======
     # User 모델의 필수 field
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -140,7 +107,6 @@ class User(AbstractBaseUser):
 
     # 헬퍼 클래스 사용
     objects = UserManager()
->>>>>>> 29d0a43e585ed17fca9b6160efedd808c740da5f
 
     # 사용자의 username field는 identification으로 설정
     USERNAME_FIELD = 'identification'
@@ -155,15 +121,7 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return str(self.nickname)
-<<<<<<< HEAD
-
-    class Meta: #모든 모델에 class Meta 넣기
-        db_table="members"
-=======
         
     class Meta: #모든 모델에 class Meta 넣기
         db_table="User"
 
-
-
->>>>>>> 29d0a43e585ed17fca9b6160efedd808c740da5f

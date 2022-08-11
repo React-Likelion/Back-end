@@ -6,6 +6,7 @@ from rest_framework.response import Response
 #from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.shortcuts import redirect
@@ -13,6 +14,7 @@ from django.db.models import Q
 
 #멘토링 CRUD
 class MentoringViewSet(viewsets.ModelViewSet):
+    #permission_classes = [AllowAny,]
     queryset=mentorings.objects.all().order_by('-create_date')
     serializer_class=serializers.MentoringSerializers
     permission_classes=[IsAuthenticatedOrReadOnly]
@@ -67,6 +69,7 @@ class MentoringViewSet(viewsets.ModelViewSet):
 
 #멘토링 챗 CRUD    
 class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
+    #permission_classes = [AllowAny,]
     queryset=mentoring_chats.objects.all().order_by('create_date')
     serializer_class=serializers.Mentoring_chatsSerializers 
     permission_classes=[IsAuthenticated]
@@ -108,10 +111,3 @@ class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
         mentoring.member_cnt=mentoring_member[pk-1].count+1
         mentoring.save()
         return redirect('/mentorings')
-
-
-#foreign-key검색 여부확인 용 임시 viewset
-class Locations_ViewSet(viewsets.ModelViewSet):
-    queryset=models.locations.objects.all()
-    serializer_class=serializers.LocationsSerializers 
-

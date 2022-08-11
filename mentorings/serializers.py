@@ -12,8 +12,4 @@ class Mentoring_chatsSerializers(serializers.ModelSerializer):
         model=models.mentoring_chats
         fields=['user_id', 'description','create_date','mentorings_id','nickname']
         
-class LocationsSerializers(serializers.ModelSerializer):
-    class Meta:
-        model=models.locations
-        fields='__all__'
         

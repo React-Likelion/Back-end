@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-from .models import User
-from rest_framework import status, generics, views
-from .tokens import account_activation_token
-import traceback
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from .serializers import SignupSerializer, LoginSerializer
-=======
 import traceback
 from .models import User
 from .tokens import account_activation_token
@@ -17,28 +8,21 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
->>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
 
-<<<<<<< HEAD
-class MembersListView(generics.ListAPIView):
-=======
 
 class UserListView(generics.ListAPIView):
     permission_classes = [AllowAny,]
->>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
+
     queryset = User.objects.all()
     serializer_class = SignupSerializer
 
 class SignupView(generics.CreateAPIView):
-<<<<<<< HEAD
-    queryset = User.objects.all()
-=======
     permission_classes = [AllowAny,]
-    #queryset = User.objects.all()
->>>>>>> 7d6332d2f8ff06a4fb2b1d0e50eaab7e89fc84dc
+    queryset = User.objects.all()
+
     serializer_class = SignupSerializer
     def post(self, request):
         serializer = self.get_serializer(data=request.data)

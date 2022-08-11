@@ -100,7 +100,7 @@ class User(AbstractBaseUser):
     nickname = models.CharField(unique=True, max_length=11)
     email = models.EmailField(max_length=254, unique=True)
     birth = models.DateField(auto_now_add=False)
-    job = models.CharField(max_length=2, choices=JOB_CHOICES)
+    job = models.CharField(max_length=30, choices=JOB_CHOICES)
     date_joined = models.DateTimeField(auto_now_add=True) 
 
     #point

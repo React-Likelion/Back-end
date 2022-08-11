@@ -8,13 +8,13 @@ from .serializers import CommunitySerializers, CommunityCommentsSerializers
 from .models import Community, CommunityComments
 
 class CommunityViewset(viewsets.ModelViewSet):
-    #permission_classes = [AllowAny,]
+    permission_classes = [AllowAny,]
     queryset = Community.objects.all()
     serializer_class = CommunitySerializers
 
 
 class CommunityCommentsViewset(viewsets.ModelViewSet):
-    #permission_classes = [AllowAny,]
+    permission_classes = [AllowAny,]
     queryset = CommunityComments.objects.all()
     serializer_class = CommunityCommentsSerializers
 

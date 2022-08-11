@@ -4,10 +4,8 @@ from mentorings import views
 
 router_mentor=routers.DefaultRouter()
 router_chat=routers.DefaultRouter()
-router_locations=routers.DefaultRouter()
 router_mentor.register('',views.MentoringViewSet)
 router_chat.register('',views.Mentoring_ChatsViewSet)
-router_locations.register('',views.Locations_ViewSet)
 
 urlpatterns=[
     #http://127.0.0.1:8000/mentorings/
@@ -17,5 +15,4 @@ urlpatterns=[
     #http://127.0.0.1:8000/mentorings/1/mentoring-chats/
     path('<int:pk>/mentoring-chats/', include(router_chat.urls)),
     
-    path('locations', include(router_locations.urls)),
 ]

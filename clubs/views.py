@@ -3,12 +3,13 @@ import re
 from django.shortcuts import render
 from django.db.models import Count
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import filters
 from rest_framework import status
 from itertools import chain
-from accounts.models import Members
+from accounts.models import User
 from .models import *
 from .serializer import *
 
@@ -21,6 +22,7 @@ def include_filter(queryset, request):
     return queryset
 
 class ClubsViewSet(ModelViewSet):
+    permission_classes = [AllowAny]
     queryset = Clubs.objects.all()
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
@@ -39,7 +41,7 @@ class ClubsViewSet(ModelViewSet):
             return Response(content, status=status.HTTP_403_FORBIDDEN)
         
         if sign_out is not None:
-            if Members.objects.get(id=sign_id) in member_list:
+            if User.objects.get(id=sign_id) in member_list:
                 club.member.remove(request.query_params.get('id'))
                 content = {'ok': 'signout complete!'}
                 return Response(content, status=status.HTTP_200_OK)
@@ -49,7 +51,7 @@ class ClubsViewSet(ModelViewSet):
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
 
         else:
-            if Members.objects.get(id=sign_id) in member_list:
+            if User.objects.get(id=sign_id) in member_list:
                 content = {'error': 'already signed!'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
             
@@ -65,6 +67,7 @@ class ClubsViewSet(ModelViewSet):
     
 
 class ClubsArticleViewSet(ModelViewSet):
+    permission_classes = [AllowAny,]
     queryset = Clubboard.objects.all()
     serializer_class = ClubBoardSerializer
         
@@ -98,6 +101,7 @@ class ClubsArticleViewSet(ModelViewSet):
 
 
 class GalleriesViewSet(ModelViewSet):
+    permission_classes = [AllowAny,]
     queryset = Galleries.objects.all()
     serializer_class = GalleriesSerializer
 
@@ -125,6 +129,7 @@ class GalleriesViewSet(ModelViewSet):
 
 
 class CommentViewSet(ModelViewSet):
+    permission_classes = [AllowAny,]
     queryset = Clubboard_comment.objects.all()
     serializer_class = CommentSerializer
 
@@ -161,11 +166,13 @@ class CommentViewSet(ModelViewSet):
 
 
 class ClubsNewViewSet(ModelViewSet):
+    permission_classes = [AllowAny,]
     queryset = Clubs.objects.all().order_by('-id')
     serializer_class = ClubsSerializer
 
 
 class ClubsMemberViewSet(ModelViewSet):
+    permission_classes = [AllowAny,]
     queryset = Clubs.objects.all()\
                 .annotate(member_cnt=Count('member'))\
                 .order_by('-member_cnt')

@@ -1,6 +1,6 @@
 from django.db import models
 
-from accounts.models import Members
+from accounts.models import User
 
 JOB_CHOICES = [
     ('관리자', '관리자'),
@@ -46,14 +46,14 @@ LOCATIIONS = [
 
 class Clubs(models.Model):
     id = models.BigAutoField(primary_key=True)
-    leader_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE, related_name='leader')
+    leader_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='leader')
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
-    field = models.CharField(max_length=20, choices=FIELDS)
+    field = models.CharField(max_length=20, choices=JOB_CHOICES)
     location = models.CharField(max_length=20, choices=LOCATIIONS)
     age_group = models.CharField(max_length=20)
     limit = models.IntegerField()
-    member = models.ManyToManyField(Members, related_name='member')
+    member = models.ManyToManyField(User, related_name='member')
     image = models.CharField(max_length=100)
 
     def member_cnt(self):
@@ -64,13 +64,13 @@ class Clubs(models.Model):
 class ClubMembers(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE)
-    member_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE)
+    member_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
 
 
 class Clubboard(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
-    writer_id= models.ForeignKey("accounts.Members", on_delete=models.CASCADE, db_column='writer_id')
+    writer_id= models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
     title = models.TextField()
     description = models.TextField()
     image = models.CharField(max_length=100)
@@ -83,7 +83,7 @@ class Clubboard_comment(models.Model):
     id = models.BigAutoField(primary_key=True)
     content = models.TextField()
     create_time = models.DateTimeField(auto_now_add=True)
-    writer_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE)
+    writer_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
     board_id = models.ForeignKey("Clubboard", on_delete=models.CASCADE)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
@@ -91,7 +91,7 @@ class Clubboard_comment(models.Model):
 class Galleries(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
-    writer_id = models.ForeignKey("accounts.Members", on_delete=models.CASCADE, db_column='writer_id')
+    writer_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
     title = models.CharField(max_length=20)
     image = models.CharField(max_length=100)
     upload_time = models.DateTimeField(auto_now_add=True)

@@ -1,3 +1,5 @@
+from email.mime import image
+from importlib.resources import path
 from .models import User
 from .tokens import account_activation_token
 from rest_framework import serializers, status
@@ -54,6 +56,7 @@ class SignupSerializer(serializers.ModelSerializer):
           'token': account_activation_token.make_token(user),
         })
 
+
         mail_subject = 'Re:act 계정을 활성화 해주세요'
         to_email = validated_data['email']
         email = EmailMessage(mail_subject, message, to=[to_email])
@@ -86,10 +89,10 @@ class LoginSerializer(serializers.ModelSerializer):
                 update_last_login(None, user) ##last_login update
 
                 if not user.check_password(password):
-                    raise serializers.ValidationError('Check Your Identification or Password')
+                    raise serializers.ValidationError('아이디 또는 비밀번호를 확인해주세요.')
         
             else:
-                raise serializers.ValidationError("User does not exist")
+                raise serializers.ValidationError("회원정보가 일치하지 않습니다.")
         
             token = RefreshToken.for_user(user=user)
             data = {
@@ -99,4 +102,4 @@ class LoginSerializer(serializers.ModelSerializer):
                 'access_token' : str(token.access_token)
             }   
             return data
-        raise serializers.ValidationError("Your account is not active")
+        raise serializers.ValidationError("아이디 또는 비밀번호를 확인해주세요.")

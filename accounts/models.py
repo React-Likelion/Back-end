@@ -73,12 +73,15 @@ class User(AbstractBaseUser):
     identification = models.CharField(max_length=11, unique=True)
     name = models.CharField(max_length=11)
     nickname = models.CharField(unique=True, max_length=11)
-    #password = models.CharField(max_length=20, unique=True)
+    #password = models.CharField(min_length=6, max_length=20, unique=True)
     email = models.EmailField(max_length=254, unique=True)
     birth = models.DateField(auto_now_add=False)
     job = models.CharField(max_length=2, choices=JOB_CHOICES)
     date_joined = models.DateTimeField(auto_now_add=True) 
     #last_login = models.DateTimeField(auto_now_add=True) 
+
+    #point
+    point = models.IntegerField(default=10000)
 
     # User 모델의 필수 field
     is_active = models.BooleanField(default=True)

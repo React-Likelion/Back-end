@@ -11,6 +11,7 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
+from django.shortcuts import redirect
 
 
 class UserListView(generics.ListAPIView):
@@ -64,7 +65,7 @@ class UserActivate(views.APIView):
             if user is not None and account_activation_token.check_token(user, token):
                user.is_active = True
                user.save()
-               return HttpResponse(user.email + '계정이 활성화 되었습니다', status=status.HTTP_200_OK)
+               return redirect("http://localhost:3000/login")
             else:
                return HttpResponse('만료된 링크입니다', status=status.HTTP_400_BAD_REQUEST)
 

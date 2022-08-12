@@ -96,6 +96,7 @@ class LoginSerializer(serializers.ModelSerializer):
             data = {
                 'user' : user.id, 
                 'email' : user.email,
+                'nickname' : user.nickname,
                 "message": "login successs",
                 'refresh_token' : str(token),
                 'access_token' : str(token.access_token)

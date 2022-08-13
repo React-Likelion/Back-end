@@ -15,6 +15,24 @@ FIELDS = [
     ('군인 및 학생', '군인 및 학생'),
 ]
 
+CATEGORY = [
+    ('외국어', '외국어'),
+    ('미술', '미술'),
+    ('요가/필라테스', '요가/필라테스'),
+    ('헬스', '헬스'),
+    ('법률', '법률'),
+    ('상담', '상담'),
+    ('뷰티', '뷰티'),
+    ('프로그래밍', '프로그래밍'),
+    ('비즈니스/마케팅', '비즈니스/마케팅'),
+    ('사진/영상', '사진/영상'),
+    ('부동산', '부동산'),
+    ('주식', '주식'),
+    ('재테크', '재테크'),
+    ('창업/부업', '창업/부업'),
+]
+
+
 LOCATIIONS = [
     ('경기도', '경기도'),
     ('강원도', '강원도'),
@@ -32,14 +50,16 @@ class mentorings(models.Model):
     nickname=models.CharField(max_length=255, null=True, blank=False)
     location = models.CharField(max_length=20, choices=LOCATIIONS)
     #fields에서 foreign키
-    field=models.CharField(max_length=20, choices=FIELDS, null=True, blank=False);
+    field=models.CharField(max_length=20, choices=CATEGORY, null=True, blank=False);
     
     title=models.TextField(null=True, blank=False);
     description=models.TextField(null=True, blank=False);
 
     age_group=models.IntegerField(null=True, blank=False);
     limit=models.IntegerField(default=0,null=True, blank=False);
-    tag=models.CharField(max_length=255, null=True, blank=False);
+    tag1=models.CharField(max_length=255, null=True, blank=False);
+    tag2=models.CharField(max_length=255, null=True, blank=False);
+    tag3=models.CharField(max_length=255, null=True, blank=False);
     image = models.ImageField(upload_to="%Y/%m/%d")
     create_date=models.DateTimeField(auto_now_add=True);
     #member와 ManytoMany연결

@@ -5,7 +5,8 @@ class MentoringSerializers(serializers.ModelSerializer):
     image=serializers.ImageField(use_url=True)
     class Meta:
         model=models.mentorings
-        fields=['user_id','location','title','description','field','age_group','limit','nickname','member_cnt','image']
+        #fields=['user_id','location','title','description','field','age_group','limit','nickname','member_cnt','image']
+        fiels = '__all__'
         
 class Mentoring_chatsSerializers(serializers.ModelSerializer):
     class Meta:

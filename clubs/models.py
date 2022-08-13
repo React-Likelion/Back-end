@@ -49,7 +49,7 @@ class Clubs(models.Model):
     leader_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='leader')
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
-    field = models.CharField(max_length=20, choices=JOB_CHOICES)
+    field = models.CharField(max_length=20, choices=CATEGORY)
     location = models.CharField(max_length=20, choices=LOCATIIONS)
     age_group = models.CharField(max_length=20)
     limit = models.IntegerField()

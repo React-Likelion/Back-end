@@ -57,7 +57,7 @@ class mentorings(models.Model):
 
     age_group=models.IntegerField(null=True, blank=False);
     limit=models.IntegerField(default=0,null=True, blank=False);
-    tag1=models.CharField(max_length=255, null=True, blank=False);
+    tag=models.CharField(max_length=255, null=True, blank=False);
     tag2=models.CharField(max_length=255, null=True, blank=False);
     tag3=models.CharField(max_length=255, null=True, blank=False);
     image = models.ImageField(upload_to="%Y/%m/%d")

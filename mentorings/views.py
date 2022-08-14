@@ -56,7 +56,7 @@ class MentoringViewSet(viewsets.ModelViewSet):
         
     @action(detail=False)    
     def listbycnt(self, request, *args, **kwargs):
-        queryset = mentorings.objects.all().order_by('-member_cnt')
+        queryset = mentorings.objects.all().order_by('-member_cnt' , '-create_date')
 
         page = self.paginate_queryset(queryset)
         if page is not None:

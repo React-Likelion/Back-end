@@ -209,6 +209,19 @@ class SignedClubViewSet(ModelViewSet):
         data = json.dumps(data)
         return Response(data=data)
 
+class MakeClubViewSet(ModelViewSet):
+    queryset = Clubs.objects.all()
+
+    @action(detail=True, methods=['GET'])
+    def get_made_club(self, request, **kwargs):
+        join_clubs = []
+        for club in self.queryset:
+            if User.objects.get(id=self.kwargs.get('pk')) == club.leader_id:
+                join_clubs.append(club.id)
+        data = {"made":join_clubs}
+        data = json.dumps(data)
+        return Response(data=data)
+
                 
 
 clubs_list = ClubsViewSet.as_view({
@@ -218,6 +231,10 @@ clubs_list = ClubsViewSet.as_view({
 
 signed_club = SignedClubViewSet.as_view({
     'get': 'get_signed_club'
+})
+
+made_club = MakeClubViewSet.as_view({
+    'get': 'get_made_club'
 })
 
 clubs_new_list = ClubsNewViewSet.as_view({

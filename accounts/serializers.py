@@ -49,7 +49,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
         message = render_to_string('account_activate_email.html', {
           'user': user,
-          'domain': 'localhost:8000',
+          'domain': 'https://port-0-back-end-14q6cqs24l6kns2t6.gksl1.cloudtype.app',
           'uid': urlsafe_base64_encode(force_bytes(user.pk)),
           'token': account_activation_token.make_token(user),
         })
@@ -96,6 +96,7 @@ class LoginSerializer(serializers.ModelSerializer):
             data = {
                 'user' : user.id, 
                 'email' : user.email,
+                'nickname' : user.nickname,
                 "message": "login successs",
                 'refresh_token' : str(token),
                 'access_token' : str(token.access_token)

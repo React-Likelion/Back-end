@@ -37,6 +37,7 @@ SUB_CATEGORY = [
     ('부동산', '부동산'),
     ('주식', '주식'),
     ('제테크', '제테크'),
+    ('선택안함', '선택안함')
 ]
 
 class Lectures(models.Model):

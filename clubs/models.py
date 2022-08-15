@@ -34,6 +34,14 @@ CATEGORY = [
 ]
 
 LOCATIIONS = [
+   ('서울특별시', '서울특별시'),
+    ('부산광역시', '부산광역시'),
+    ('대구광역시', '대구광역시'),
+    ('인천광역시', '인천광역시'),
+    ('광주광역시', '광주광역시'),
+    ('대전광역시', '대전광역시'),
+    ('울산광역시', '울산광역시'),
+    ('세종특별자치시', '세종특별자치시'), 
     ('경기도', '경기도'),
     ('강원도', '강원도'),
     ('충청북도', '충청북도'),
@@ -42,6 +50,7 @@ LOCATIIONS = [
     ('전라남도', '전라남도'),
     ('경상북도', '경상북도'),
     ('경상남도', '경상남도'),
+    ('제주특별자치도', '제주특별자치도')
 ]
 
 class Clubs(models.Model):
@@ -49,7 +58,7 @@ class Clubs(models.Model):
     leader_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='leader')
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
-    field = models.CharField(max_length=20, choices=JOB_CHOICES)
+    field = models.CharField(max_length=20, choices=CATEGORY)
     location = models.CharField(max_length=20, choices=LOCATIIONS)
     age_group = models.CharField(max_length=20)
     limit = models.IntegerField()

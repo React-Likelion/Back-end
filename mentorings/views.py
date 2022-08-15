@@ -66,8 +66,37 @@ class MentoringViewSet(viewsets.ModelViewSet):
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)    
+        return Response(serializer.data)
+    
+    @action(detail=False)    
+    def make(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        writer=request.user.nickname
+        queryset=queryset.filter(nickname=writer)
         
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+        
+    @action(detail=False)    
+    def register(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        user_id=request.user.id
+        nickname=request.user.nickname
+        print(user_id)
+        queryset = queryset.filter(User__in=[user_id]).exclude(nickname=nickname)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)    
 
 #멘토링 챗 CRUD    
 class Mentoring_ChatsViewSet(viewsets.ModelViewSet):

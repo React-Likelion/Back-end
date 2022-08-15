@@ -29,3 +29,8 @@ class CommunityOnlySerializers(serializers.ModelSerializer):
         parent_comments = obj.comment.filter(comment_id = None)
         serializer = CommunityCommentsSerializers(parent_comments, many = True)
         return serializer.data
+
+class MainPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Community
+        fields = ['id', 'title', 'category', 'writer_id']

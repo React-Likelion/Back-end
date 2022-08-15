@@ -27,6 +27,18 @@ class ClubsViewSet(ModelViewSet):
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
+
+    @action(detail=False, method=['POST'])
+    def club_create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        club = Clubs.objects.all().order_by('-id')[0] 
+        new_club = ClubMembers(club_id=club)
+        new_club.save()
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
     
     @action(detail=True, method=['POST'])
     def club_signin(self, request, **kwargs):
@@ -55,12 +67,15 @@ class ClubsViewSet(ModelViewSet):
                 content = {'error': 'already signed!'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
             
-            if club.member_cnt() >= club.limit:
+            club_member = ClubMembers.objects.filter(club_id__id=club.id)[0]
+            if club_member.member_cnt >= club.limit:
                 content = {'error': 'club is already full!'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
             
             club.member.add(request.data.get('id'))
             club.save()
+            club_member.member_cnt += 1
+            club_member.save()
 
             content = {'ok': 'singin complete!'}
             return Response(content, status=status.HTTP_200_OK)
@@ -182,7 +197,7 @@ class ClubsMemberViewSet(ModelViewSet):
 
 clubs_list = ClubsViewSet.as_view({
     'get': 'list',
-    'post': 'create',
+    'post': 'club_create',
 })
 
 clubs_new_list = ClubsNewViewSet.as_view({

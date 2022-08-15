@@ -16,8 +16,22 @@ from .serializer import *
 
 
 def include_filter(queryset, request):
+    filtering = {i:[] for i in set(request.keys())}
+
     for key, val in request.items():
-        queryset = queryset.filter(**{f"{key}__contains":val})
+        filtering[key].append(val)
+    
+    for key, vals in filtering.items():
+        if len(vals) == 1:
+            queryset = queryset.filter(**{f"{key}__contains":val})
+        else:
+            queryset_list = []
+            for val in vals:
+                queryset_list.append(queryset.filter(**{f"{key}__contains":val}))
+            
+            queryset = queryset_list[0]
+            for query in queryset_list[1:]:
+                queryset = queryset | query
 
     print(queryset)
     return queryset
@@ -28,6 +42,13 @@ class ClubsViewSet(ModelViewSet):
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
+
+    @action(detail=False, method=['GET'])
+    def club_list(self, request, *args, **kwargs):
+        queryset = include_filter(self.queryset, request.query_params)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
     @action(detail=False, method=['POST'])
     def club_create(self, request, *args, **kwargs):
@@ -225,7 +246,7 @@ class MakeClubViewSet(ModelViewSet):
                 
 
 clubs_list = ClubsViewSet.as_view({
-    'get': 'list',
+    'get': 'club_list',
     'post': 'club_create',
 })
 

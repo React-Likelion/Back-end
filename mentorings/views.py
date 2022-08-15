@@ -48,6 +48,10 @@ class MentoringViewSet(viewsets.ModelViewSet):
         return queryset
     
     def perform_create(self, serializer):
+        temp=[]
+        member=get_object_or_404(User, nickname=self.request.user)
+        temp+=[member]
+        serializer.save(User=temp)        
         serializer.save(user_id=self.request.user)
         serializer.save(member_cnt=1)
         serializer.save(nickname=self.request.user.nickname)                
@@ -84,8 +88,8 @@ class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
         #manytomany테이블에 추가
         mentoring.User.add(member)
         #인원수 증가
-        mentoring_member=mentorings.objects.annotate(count=Count('User'))
-        mentoring.member_cnt=mentoring_member[pk-1].count+1
+        mentoring_member=mentorings.objects.annotate(count=Count('User')).filter(id=pk)
+        mentoring.member_cnt=mentoring_member[0].count
         mentoring.save()
 
         page = self.paginate_queryset(queryset)
@@ -105,7 +109,6 @@ class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
         #manytomany테이블에서 삭제
         mentoring.User.remove(member)
         #인원수 감소
-        mentoring_member=mentorings.objects.annotate(count=Count('User'))
-        mentoring.member_cnt=mentoring_member[pk-1].count+1
-        mentoring.save()
+        mentoring_member=mentorings.objects.annotate(count=Count('User')).filter(id=pk)
+        mentoring.member_cnt=mentoring_member[0].count
         return redirect('/mentorings')

@@ -119,8 +119,6 @@ WSGI_APPLICATION = 'react.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 
-
-
 AUTH_USER_MODEL = 'accounts.User'
 
 DATABASES = {

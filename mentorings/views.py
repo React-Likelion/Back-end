@@ -5,8 +5,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 #from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.shortcuts import redirect
@@ -14,7 +13,6 @@ from django.db.models import Q
 
 #멘토링 CRUD
 class MentoringViewSet(viewsets.ModelViewSet):
-    #permission_classes = [AllowAny,]
     queryset=mentorings.objects.all().order_by('-create_date')
     serializer_class=serializers.MentoringSerializers
     permission_classes=[IsAuthenticatedOrReadOnly]
@@ -56,7 +54,7 @@ class MentoringViewSet(viewsets.ModelViewSet):
         
     @action(detail=False)    
     def listbycnt(self, request, *args, **kwargs):
-        queryset = mentorings.objects.all().order_by('-member_cnt')
+        queryset = mentorings.objects.all().order_by('-member_cnt','-create_date')
 
         page = self.paginate_queryset(queryset)
         if page is not None:

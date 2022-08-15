@@ -1,30 +1,7 @@
 from django.db import models
 from accounts.models import User
 #usermodel 가져와서 manytomany로 만들어줌
-
-FIELDS = [
-    ('관리자', '관리자'),
-    ('전문가 및 관련 종사자', '전문가 및 관련 종사자'),
-    ('사무 종사자', '사무 종사자'),
-    ('서비스 종사자', '서비스 종사자'),
-    ('판매 종사자', '판매 종사자'),
-    ('농림 어업 숙련 종사자', '농림 어업 숙련 종사자'),
-    ('기은원 및 관련 기능 종사자', '기은원 및 관련 기능 종사자'),
-    ('장치 기계 조작 및 조립 종사자', '장치 기계 조작 및 조립 종사자'),
-    ('단순 노무 종사자', '단순 노무 종사자'),
-    ('군인 및 학생', '군인 및 학생'),
-]
-
-LOCATIIONS = [
-    ('경기도', '경기도'),
-    ('강원도', '강원도'),
-    ('충청북도', '충청북도'),
-    ('충청남도', '충청남도'),
-    ('전라북도', '전라북도'),
-    ('전라남도', '전라남도'),
-    ('경상북도', '경상북도'),
-    ('경상남도', '경상남도'),
-]
+from clubs.models import LOCATIIONS, JOB_CHOICES
 
 class mentorings(models.Model):
     #locations에서 foreign키
@@ -32,7 +9,7 @@ class mentorings(models.Model):
     nickname=models.CharField(max_length=255,null=True)
     location = models.CharField(max_length=20, choices=LOCATIIONS)
     #fields에서 foreign키
-    field=models.CharField(max_length=20, choices=FIELDS);
+    field=models.CharField(max_length=20, choices=JOB_CHOICES);
     
     title=models.TextField();
     description=models.TextField();

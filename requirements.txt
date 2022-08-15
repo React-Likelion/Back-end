@@ -1,5 +1,4 @@
 asgiref==3.5.2
-certifi @ file:///C:/Windows/TEMP/abs_e9b7158a-aa56-4a5b-87b6-c00d295b01fanefpc8_o/croots/recipe/certifi_1655968940823/work/certifi
 charset-normalizer==2.1.0
 coreapi==2.3.3
 coreschema==0.0.4

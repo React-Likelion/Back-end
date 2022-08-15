@@ -12,6 +12,7 @@ lectures_list = LecturesViewSet.as_view({
     'post': 'create',
 })
 
+
 lectures_detail = LecturesViewSet.as_view({
     'get': 'retrieve',
     'delete': 'destroy',

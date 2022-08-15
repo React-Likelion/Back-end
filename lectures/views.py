@@ -16,8 +16,7 @@ class LecturesViewSet(viewsets.ModelViewSet):
     serializer_class = LecturesSerializer
 
     def perform_create(self, serializer):
-        User.objects.filter(nickname=self.request.user).update(point=F('point')+300)
-        return super().perform_create(serializer)
+        serializer.save(User.objects.filter(nickname=self.request.user).update(point=F('point')+300))
 
     def list(self, request):
         if (request.GET.get('sort') != None):
@@ -97,4 +96,5 @@ class LecturesLikeViewSet(viewsets.ModelViewSet):
                 Lectures.objects.filter(id=pk).update(like_cnt=F('like_cnt')+1)
             return Response({"message": "success"}, status=status.HTTP_202_ACCEPTED)
         return Response({"message": "success"}, status=status.HTTP_202_ACCEPTED)
+
 

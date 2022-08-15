@@ -1,5 +1,6 @@
 from curses import nonl
 import re
+import json
 from django.shortcuts import render
 from django.db.models import Count
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
@@ -193,11 +194,30 @@ class ClubsMemberViewSet(ModelViewSet):
                 .order_by('-member_cnt')
     serializer_class = ClubsSerializer
 
+
+class SignedClubViewSet(ModelViewSet):
+    queryset = Clubs.objects.all()
+
+    @action(detail=True, methods=['GET'])
+    def get_signed_club(self, request, **kwargs):
+        join_clubs = []
+        for club in self.queryset:
+            member_list = club.member.all()
+            if User.objects.get(id=self.kwargs.get('pk')) in member_list:
+                join_clubs.append(club.id)
+        data = {"joined":join_clubs}
+        data = json.dumps(data)
+        return Response(data=data)
+
                 
 
 clubs_list = ClubsViewSet.as_view({
     'get': 'list',
     'post': 'club_create',
+})
+
+signed_club = SignedClubViewSet.as_view({
+    'get': 'get_signed_club'
 })
 
 clubs_new_list = ClubsNewViewSet.as_view({

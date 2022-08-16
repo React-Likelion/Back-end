@@ -16,12 +16,9 @@ from .serializer import *
 
 
 def include_filter(queryset, request):
-    filtering = {i:[] for i in set(request.keys())}
-
-    for key, val in request.items():
-        filtering[key].append(val)
-    
-    for key, vals in filtering.items():
+    request = dict(request)
+    for key, vals in request.items():
+        print(key, vals)
         if len(vals) == 1:
             queryset = queryset.filter(**{f"{key}__contains":val})
         else:
@@ -43,10 +40,35 @@ class ClubsViewSet(ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
 
+    @action(detail=True, method=['PATCH'])
+    def patch_update(self, request, *args, **kwargs):
+        def update(request, *args, **kwargs):
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            next_leader = User.objects.get(nickname=request.data['nickname']).id
+            request.data._mutable = True
+            request.data['leader_id'] = next_leader
+            request.data._mutable = False
+
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            if getattr(instance, '_prefetched_objects_cache', None):
+                instance._prefetched_objects_cache = {}
+
+            return Response(serializer.data)
+        kwargs['partial'] = True
+        return update(request, *args, **kwargs)
+    
+
+
+
     @action(detail=False, method=['GET'])
     def club_list(self, request, *args, **kwargs):
-        queryset = include_filter(self.queryset, request.query_params)
-        serializer = self.get_serializer(queryset, many=True)
+        if request.query_params:
+            self.queryset = include_filter(self.queryset, request.query_params)
+        serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 
 
@@ -269,7 +291,7 @@ clubs_member_list = ClubsMemberViewSet.as_view({
 clubs_detail = ClubsViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
-    'patch': 'partial_update',
+    'patch': 'patch_update',
     'delete': 'destroy',
 
     'post': 'club_signin',

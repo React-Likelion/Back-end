@@ -69,11 +69,10 @@ class Clubs(models.Model):
         return self.member.all().count()
 
 
-#? 용도를 잘 모르겠습니다.
 class ClubMembers(models.Model):
     id = models.BigAutoField(primary_key=True)
-    club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE)
-    member_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
+    club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE, related_name='club_members')
+    member_cnt = models.IntegerField(default=0)
 
 
 class Clubboard(models.Model):

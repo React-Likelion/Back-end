@@ -22,6 +22,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('activate/<str:uidb64>/<str:token>/', UserActivate.as_view(), name="activate"),
-    path('point/', point_list)
+    #path('point/', point_list)
     #path('', include(router.urls))
 ]

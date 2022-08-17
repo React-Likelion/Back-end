@@ -1,4 +1,4 @@
-from .models import User, Logs
+from .models import User
 from .tokens import account_activation_token
 from rest_framework import serializers, status
 from rest_framework.response import Response
@@ -105,7 +105,8 @@ class LoginSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError("계정이 활성화 전입니다. 계정을 활성화하세요.")
 
 
-class LogSerializer(serializers.ModelSerializer):
+""" class LogSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Logs
         fields = '__all__'
@@ -114,7 +115,9 @@ class PointSerializer(serializers.ModelSerializer):
     serializer = LogSerializer(many=True)
     class Meta:
         model = User
-        fields = ('id', 'nickname', 'point', 'log')
+
+        fields = ('id', 'nickname', 'point', 'log') """
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(

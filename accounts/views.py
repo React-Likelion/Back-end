@@ -2,7 +2,7 @@ import traceback
 from .models import User
 from .tokens import account_activation_token
 
-from .serializers import SignupSerializer, LoginSerializer, PointSerializer, UserSerializer
+from .serializers import SignupSerializer, LoginSerializer, UserSerializer
 
 
 from rest_framework import status, generics, views, viewsets
@@ -93,9 +93,11 @@ class LoginView(generics.GenericAPIView):
         return response
 
 
-class PointViewSet(viewsets.ModelViewSet):
+""" class PointViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = PointSerializer
+ """
+
 
 class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated,]
@@ -117,4 +119,5 @@ class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
             
             return res
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 

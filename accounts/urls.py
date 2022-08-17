@@ -1,16 +1,12 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from accounts.views import UserListView, SignupView, UserActivate, LoginView, PointViewSet
+from accounts.views import UserListView, SignupView, UserActivate, LoginView
 
 #router = routers.DefaultRouter()
 #router.register(r'signup', SignupViewSet)
 app_name = 'accounts'
 
-point_list = PointViewSet.as_view({
-    'get': 'list',
-    'post': 'create',
-})
 
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),

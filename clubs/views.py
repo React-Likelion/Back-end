@@ -27,6 +27,13 @@ class ClubsViewSet(ModelViewSet):
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
+
+    @action(detail=False)
+    def main(self, request):
+        queryset = self.get_queryset().order_by('-id')[:4]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
     
     @action(detail=True, method=['POST'])
     def club_signin(self, request, **kwargs):

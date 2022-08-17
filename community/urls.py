@@ -12,6 +12,12 @@ community_list = CommunityViewset.as_view({
     'post': 'create',
 })
 
+community_detail = CommunityViewset.as_view({
+    'get': 'retrieve',
+    'delete': 'destroy',
+    'post': 'update',
+})
+
 
 communitycomment_list = CommunityCommentsViewset.as_view({
     'get': 'list',
@@ -28,6 +34,7 @@ communitycomment_detail = CommunityCommentsViewset.as_view({
 
 urlpatterns = [
     path('',community_list),
+    path('<int:pk>/',community_detail),
     path('<int:pk>/comments/',communitycomment_list),
     path('<int:pk>/comments/<int:pk1>/',communitycomment_detail)
 ]

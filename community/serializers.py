@@ -18,7 +18,7 @@ class CommunityCommentsSerializers(serializers.ModelSerializer):
         serializer.bind('', self)
         return serializer.data
 
-class CommunityOnlySerializers(serializers.ModelSerializer):
+""" class CommunityOnlySerializers(serializers.ModelSerializer):
     parent_comments = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,9 +28,5 @@ class CommunityOnlySerializers(serializers.ModelSerializer):
     def get_parent_comments(self, obj):
         parent_comments = obj.comment.filter(comment_id = None)
         serializer = CommunityCommentsSerializers(parent_comments, many = True)
-        return serializer.data
+        return serializer.data """
 
-class MainPageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Community
-        fields = ['id', 'title', 'category', 'writer_id']

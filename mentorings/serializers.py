@@ -10,7 +10,7 @@ class MentoringSerializers(serializers.ModelSerializer):
         )
     class Meta:
         model=models.mentorings
-        fields=['User', 'user_id','location','title','description','field','age_group','limit','nickname','member_cnt','image']
+        fields=['User', 'user_image', 'user_id','location','title','description','field','age_group','limit','nickname','member_cnt','image', 'tag', 'tag2', 'tag3']
 
 class Mentoring_chatsSerializers(serializers.ModelSerializer):
     class Meta:

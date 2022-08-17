@@ -1,7 +1,7 @@
 import traceback
 from .models import User
 from .tokens import account_activation_token
-from .serializers import SignupSerializer, LoginSerializer, PointSerializer
+from .serializers import SignupSerializer, LoginSerializer
 
 from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
@@ -90,6 +90,7 @@ class LoginView(generics.GenericAPIView):
         response.delete_cookie("refresh_token")
         return response
 
-class PointViewSet(viewsets.ModelViewSet):
+""" class PointViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = PointSerializer
+ """

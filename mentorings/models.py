@@ -52,7 +52,7 @@ class mentorings(models.Model):
     
     title=models.TextField()
     description=models.TextField()
-    age_group=models.IntegerField()
+    age_group=models.TextField()
     limit=models.IntegerField()
 
     tag=models.CharField(max_length=255, null=True, blank=False)

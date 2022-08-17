@@ -43,7 +43,6 @@ LOCATIIONS = [
 class mentorings(models.Model):
     #locations에서 foreign키
     user_id=models.ForeignKey(User,on_delete=models.CASCADE, db_column="user_id", null=True)
-    user_image = models.ForeignKey(User, to_field='image', on_delete=models.CASCADE, related_name='user_image')
 
     nickname=models.CharField(max_length=255,null=True)
     location = models.CharField(max_length=20, choices=LOCATIIONS)

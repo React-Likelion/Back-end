@@ -55,7 +55,8 @@ LOCATIIONS = [
 
 class Clubs(models.Model):
     id = models.BigAutoField(primary_key=True)
-    leader_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='leader')
+    leader_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leader')
+    leader_image = models.ForeignKey(User, to_field='image', on_delete=models.CASCADE, related_name='leder_image')
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
     field = models.CharField(max_length=20, choices=CATEGORY)
@@ -78,7 +79,8 @@ class ClubMembers(models.Model):
 class Clubboard(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
-    writer_id= models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
+    writer_id= models.ForeignKey(User, on_delete=models.CASCADE, db_column='writer_id')
+    writer_image = models.ForeignKey(User, to_field='image', on_delete=models.CASCADE, related_name='clubs_writer_image')
     title = models.TextField()
     description = models.TextField()
     image = models.ImageField(blank=True, upload_to="clubs/", null=True)
@@ -91,15 +93,17 @@ class Clubboard_comment(models.Model):
     id = models.BigAutoField(primary_key=True)
     content = models.TextField()
     create_time = models.DateTimeField(auto_now_add=True)
-    writer_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
-    board_id = models.ForeignKey("Clubboard", on_delete=models.CASCADE)
+    writer_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    writer_image = models.ForeignKey(User, to_field='image', on_delete=models.CASCADE, related_name='writer_image')
+    board_id = models.ForeignKey(Clubboard, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
 
 class Galleries(models.Model):
     id = models.BigAutoField(primary_key=True)
-    club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
-    writer_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
+    club_id= models.ForeignKey(Clubs, on_delete=models.CASCADE, db_column='club_id')
+    writer_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='writer_id')
+    writer_image = models.ForeignKey(User, to_field='image', on_delete=models.CASCADE, related_name='galleries_writer_image')
     title = models.CharField(max_length=20)
     image = models.ImageField(blank=True, upload_to="clubs/", null=True)
     upload_time = models.DateTimeField(auto_now_add=True)

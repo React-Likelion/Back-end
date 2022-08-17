@@ -1,9 +1,11 @@
 import traceback
 from .models import User
 from .tokens import account_activation_token
-from .serializers import SignupSerializer, LoginSerializer, UserSerializer
 
-from rest_framework import status, generics, views
+from .serializers import SignupSerializer, LoginSerializer, PointSerializer, UserSerializer
+
+
+from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -90,6 +92,11 @@ class LoginView(generics.GenericAPIView):
         response.delete_cookie("refresh_token")
         return response
 
+
+class PointViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = PointSerializer
+
 class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated,]
     
@@ -110,3 +117,4 @@ class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
             
             return res
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

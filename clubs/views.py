@@ -40,6 +40,14 @@ class ClubsViewSet(ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
 
+
+    @action(detail=False)
+    def main(self, request):
+        queryset = self.get_queryset().order_by('-id')[:4]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
     @action(detail=True, method=['PATCH'])
     def patch_update(self, request, *args, **kwargs):
         def update(request, *args, **kwargs):

@@ -61,7 +61,7 @@ class Lectures(models.Model):
 
     visit_cnt = models.IntegerField(default = 0)
 
-    image1 = models.ImageField(blank=True, upload_to="lectures/", null=True)
+    image1 = models.ImageField(upload_to="lectures/")
     image2 = models.ImageField(blank=True, upload_to="lectures/", null=True)
     image3 = models.ImageField(blank=True, upload_to="lectures/", null=True)
     image4 = models.ImageField(blank=True, upload_to="lectures/", null=True)
@@ -91,4 +91,3 @@ class LikeMembers(models.Model):
 
     class Meta:
         db_table = 'like'
-

@@ -8,6 +8,11 @@ class ClubsSerializer(ModelSerializer):
         model = Clubs
         fields = '__all__'
 
+class ClubMembersSerializer(ModelSerializer):
+    class Meta:
+        model = ClubMembers
+        fields = '__all__'
+
 
 class ClubBoardSerializer(ModelSerializer):
     class Meta:

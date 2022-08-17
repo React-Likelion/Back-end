@@ -1,3 +1,5 @@
+from email.policy import default
+from enum import unique
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
@@ -38,7 +40,7 @@ class UserManager(BaseUserManager):
         return User
         
     # 관리자 user 생성
-    def create_superuser(self, identification, name, nickname, password, email, birth, job, ):
+    def create_superuser(self, identification, name, nickname, password, email, birth, job):
 
         User = self.model(
             identification = identification,
@@ -94,6 +96,12 @@ JOB_CHOICES = [
     ('없음', '없음')
 ]
 
+class Logs(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    plus_log = models.TextField(blank = True, null = True)
+    minus_log = models.TextField(blank = True, null = True)
+    payment_date = models.DateTimeField('CREATE DT', auto_now_add=True)
+
 class User(AbstractBaseUser):
     identification = models.CharField(max_length=11, unique=True)
     name = models.CharField(max_length=11)
@@ -102,9 +110,11 @@ class User(AbstractBaseUser):
     birth = models.DateField(auto_now_add=False)
     job = models.CharField(max_length=30, choices=JOB_CHOICES)
     date_joined = models.DateTimeField(auto_now_add=True) 
+    image = models.ImageField(blank=True, upload_to="accounts/", default='accounts/user.png')
 
     #point
     point = models.IntegerField(default=10000)
+    log = models.ManyToManyField(Logs, blank=True)
 
     # User 모델의 필수 field
     is_active = models.BooleanField(default=True)
@@ -130,4 +140,5 @@ class User(AbstractBaseUser):
         
     class Meta: #모든 모델에 class Meta 넣기
         db_table="User"
+
 

@@ -4,10 +4,11 @@ from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 
 from .serializers import LecturesSerializer
 from .models import Lectures
-from accounts.models import User
+from accounts.models import User, Logs
 
 
 class LecturesViewSet(viewsets.ModelViewSet):
@@ -16,7 +17,15 @@ class LecturesViewSet(viewsets.ModelViewSet):
     serializer_class = LecturesSerializer
 
     def perform_create(self, serializer):
-        serializer.save(User.objects.filter(nickname=self.request.user).update(point=F('point')+300))
+        serializer.save()
+        User.objects.filter(nickname=self.request.user).update(point=F('point')+1000)
+        point = Logs(plus_log='+1000')
+        point.save()
+        queryset = User.objects.filter(nickname=self.request.user)
+        insert = get_object_or_404(queryset)
+        insert.log.add(Logs.objects.latest('id'))
+        #print(User.objects.filter(nickname=self.request.user))
+
 
     def list(self, request):
         if (request.GET.get('sort') != None):
@@ -43,6 +52,25 @@ class LecturesViewSet(viewsets.ModelViewSet):
         serializer = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    
+    @action(detail=False)    
+    def mypage(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(writer=self.request.user).order_by('-id')
+        #print(self.request.user)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+        
+    @action(detail=False)    
+    def mypagelectures(self, request, *args, **kwargs):
+        queryset = self.get_queryset().filter(enroll_students__in=[self.request.user]).exclude(writer=self.request.user).order_by('-id')
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)  
+    
+    @action(detail=False)
+    def main(self, request):
+        queryset = self.get_queryset().order_by('-id')[:4]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
     def retrieve(self, request, pk=None):
         view = Lectures.objects.get(id = pk)
@@ -51,7 +79,7 @@ class LecturesViewSet(viewsets.ModelViewSet):
         data = self.serializer_class(view).data
         
         return Response(data, status=status.HTTP_202_ACCEPTED)
-        
+
 
 class LecturesEnrollViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
@@ -71,11 +99,12 @@ class LecturesEnrollViewSet(viewsets.ModelViewSet):
                 lectures.enroll_students.add(request.user)
                 Lectures.objects.filter(id=pk).update(enroll_cnt=F('enroll_cnt')+1)
                 prices = Lectures.objects.get(id=pk).price
-                print(prices)
+                #print(prices)
+                print(User.objects.filter(nickname=request.user))
                 User.objects.filter(nickname=request.user).update(point=F('point')-prices)
 
-            return Response({"message": "success"}, status=status.HTTP_202_ACCEPTED)
-        return Response({"message": "success"}, status=status.HTTP_202_ACCEPTED)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
 class LecturesLikeViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
@@ -94,7 +123,7 @@ class LecturesLikeViewSet(viewsets.ModelViewSet):
             else:
                 lectures.like_members.add(request.user)
                 Lectures.objects.filter(id=pk).update(like_cnt=F('like_cnt')+1)
-            return Response({"message": "success"}, status=status.HTTP_202_ACCEPTED)
-        return Response({"message": "success"}, status=status.HTTP_202_ACCEPTED)
-
+            
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 

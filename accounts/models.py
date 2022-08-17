@@ -1,3 +1,4 @@
+from email.policy import default
 from enum import unique
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
@@ -109,7 +110,7 @@ class User(AbstractBaseUser):
     birth = models.DateField(auto_now_add=False)
     job = models.CharField(max_length=30, choices=JOB_CHOICES)
     date_joined = models.DateTimeField(auto_now_add=True) 
-    image = models.ImageField(blank=True, upload_to="accounts/", null=True, unique=True)
+    image = models.ImageField(blank=True, upload_to="accounts/", default='accounts/user.png')
 
     #point
     point = models.IntegerField(default=10000)

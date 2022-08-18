@@ -9,7 +9,7 @@ lectures_router.register('', LecturesViewSet)
 
 lectures_list = LecturesViewSet.as_view({
     'get': 'list',
-    'post': 'create',
+    'post': 'perform_create',
 })
 
 lectures_detail = LecturesViewSet.as_view({

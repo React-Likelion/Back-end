@@ -78,7 +78,8 @@ class ClubMembers(models.Model):
 class Clubboard(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
-    writer_id= models.ForeignKey(User, on_delete=models.CASCADE, db_column='writer_id')
+    writer_id= models.ForeignKey(User, on_delete=models.CASCADE, db_column='writer_id', related_name='writer_id')
+    writer_nickname= models.ForeignKey(User, to_field='nickname',on_delete=models.CASCADE, db_column='writer_nickname', related_name='writer_nickname')
     title = models.TextField()
     description = models.TextField()
     image = models.ImageField(blank=True, upload_to="clubs/", null=True)

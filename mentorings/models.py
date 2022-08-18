@@ -59,7 +59,7 @@ class mentorings(models.Model):
     tag3=models.CharField(max_length=255, null=True, blank=False)
 
     image = models.ImageField()
-    imageurl=models.URLField(null=True)
+    #imageurl=models.URLField(null=True)
     
     create_date=models.DateTimeField(auto_now_add=True);
     

@@ -10,9 +10,9 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.db.models import Q
-import imgbbpy
-import urllib.request
-from react.settings import MEDIA_URL, MEDIA_ROOT
+# import imgbbpy
+# import urllib.request
+# from react.settings import MEDIA_URL, MEDIA_ROOT
 
 #멘토링 CRUD
 class MentoringViewSet(viewsets.ModelViewSet):
@@ -65,20 +65,20 @@ class MentoringViewSet(viewsets.ModelViewSet):
         serializer.save(member_cnt=1)
         serializer.save(nickname=self.request.user.nickname)         
         
-        data=serializer.save()        
-        client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
-        temp=data.image
-        root='http://127.0.0.1:8000'+MEDIA_URL
-        path=root+str(temp)
-        #tempmediaroot=str(MEDIA_ROOT)
-        pathtemp='media/a.jpg'
-        print(f"path: {path}, pathtemp: {pathtemp}")
-        print('111111111111111111111111111111')
-        urllib.request.urlretrieve(path, pathtemp)
-        image = client.upload(file=pathtemp)
-        print(image.url)
+#         data=serializer.save()        
+#         client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
+#         temp=data.image
+#         root='http://127.0.0.1:8000'+MEDIA_URL
+#         path=root+str(temp)
+#         #tempmediaroot=str(MEDIA_ROOT)
+#         pathtemp='media/a.jpg'
+#         print(f"path: {path}, pathtemp: {pathtemp}")
+#         print('111111111111111111111111111111')
+#         urllib.request.urlretrieve(path, pathtemp)
+#         image = client.upload(file=pathtemp)
+#         print(image.url)
         
-        serializer.save(imageurl=image.url)     
+#         serializer.save(imageurl=image.url)     
         
         
     @action(detail=False)    

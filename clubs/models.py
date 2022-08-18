@@ -64,7 +64,7 @@ class Clubs(models.Model):
     limit = models.IntegerField()
     member = models.ManyToManyField(User, related_name='member')
     image = models.ImageField(blank=True, upload_to="clubs/", null=True)
-    imageurl=models.URLField(null=True)
+    #imageurl=models.URLField(null=True)
 
     def member_cnt(self):
         return self.member.all().count()
@@ -104,5 +104,5 @@ class Galleries(models.Model):
     writer_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='writer_id')
     title = models.CharField(max_length=20)
     image = models.ImageField(blank=True, upload_to="clubs/", null=True)
-    imageurl=models.URLField(null=True)
+    #imageurl=models.URLField(null=True)
     upload_time = models.DateTimeField(auto_now_add=True)

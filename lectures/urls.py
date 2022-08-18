@@ -15,7 +15,7 @@ lectures_list = LecturesViewSet.as_view({
 lectures_detail = LecturesViewSet.as_view({
     'get': 'retrieve',
     'delete': 'destroy',
-    'post': 'update',
+    'patch': 'update',
 })
 
 lectures_enroll = LecturesEnrollViewSet.as_view({
@@ -41,11 +41,13 @@ main_list = MainPageViewSet.as_view({
 
 
 urlpatterns =[
-    path('', include(lectures_router.urls)),
-    path('<int:pk>/enroll/',lectures_enroll),
-    path('<int:pk>/like/',lectures_like),
+    path('', lectures_list),
+    path('<int:pk>/', lectures_detail),
     path('mypage/', mypage_list),
     path('mypagelectures/', mypagelectures_list),
     path('main/', main_list),
+    path('<int:pk>/enroll/',lectures_enroll),
+    path('<int:pk>/like/',lectures_like),
+    
 
 ] 

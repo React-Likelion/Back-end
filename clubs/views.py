@@ -1,5 +1,6 @@
 from curses import nonl
 import re
+import json
 from django.shortcuts import render
 from django.db.models import Count
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
@@ -15,9 +16,19 @@ from .serializer import *
 
 
 def include_filter(queryset, request):
-    for key, val in request.items():
-        queryset = queryset.filter(**{f"{key}__contains":val})
-
+    request = dict(request)
+    for key, vals in request.items():
+        print(key, vals)
+        if len(vals) == 1:
+            queryset = queryset.filter(**{f"{key}__contains":val})
+        else:
+            queryset_list = []
+            for val in vals:
+                queryset_list.append(queryset.filter(**{f"{key}__contains":val}))
+            
+            queryset = queryset_list[0]
+            for query in queryset_list[1:]:
+                queryset = queryset | query
     print(queryset)
     return queryset
 
@@ -28,10 +39,38 @@ class ClubsViewSet(ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
 
+    @action(detail=True, method=['PATCH'])
+    def patch_update(self, request, *args, **kwargs):
+        def update(request, *args, **kwargs):
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            next_leader = User.objects.get(nickname=request.data['nickname']).id
+            request.data._mutable = True
+            request.data['leader_id'] = next_leader
+            request.data._mutable = False
+
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            if getattr(instance, '_prefetched_objects_cache', None):
+                instance._prefetched_objects_cache = {}
+
+            return Response(serializer.data)
+        kwargs['partial'] = True
+        return update(request, *args, **kwargs)
+
     @action(detail=False)
     def main(self, request):
         queryset = self.get_queryset().order_by('-id')[:4]
         serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, method=['GET'])
+    def club_list(self, request, *args, **kwargs):
+        if request.query_params:
+            self.queryset = include_filter(self.queryset, request.query_params)
+        serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 
     @action(detail=False, method=['POST'])
@@ -200,6 +239,31 @@ class ClubsMemberViewSet(ModelViewSet):
                 .order_by('-member_cnt')
     serializer_class = ClubsSerializer
 
+class SignedClubViewSet(ModelViewSet):
+    queryset = Clubs.objects.all()
+    @action(detail=True, methods=['GET'])
+    def get_signed_club(self, request, **kwargs):
+        join_clubs = []
+        for club in self.queryset:
+            member_list = club.member.all()
+            if User.objects.get(id=self.kwargs.get('pk')) in member_list:
+                join_clubs.append(club.id)
+        data = {"joined":join_clubs}
+        data = json.dumps(data)
+        return Response(data=data)
+
+class MakeClubViewSet(ModelViewSet):
+    queryset = Clubs.objects.all()
+    @action(detail=True, methods=['GET'])
+    def get_made_club(self, request, **kwargs):
+        join_clubs = []
+        for club in self.queryset:
+            if User.objects.get(id=self.kwargs.get('pk')) == club.leader_id:
+                join_clubs.append(club.id)
+        data = {"made":join_clubs}
+        data = json.dumps(data)
+        return Response(data=data)
+
 class MypageViewSet(ModelViewSet):
     queryset = Clubs.objects.all().order_by('-id')[:4]
     serializer_class = ClubsSerializer
@@ -207,6 +271,13 @@ class MypageViewSet(ModelViewSet):
 clubs_list = ClubsViewSet.as_view({
     'get': 'list',
     'post': 'club_create',
+})
+
+signed_club = SignedClubViewSet.as_view({
+    'get': 'get_signed_club'
+})
+made_club = MakeClubViewSet.as_view({
+    'get': 'get_made_club'
 })
 
 clubs_new_list = ClubsNewViewSet.as_view({
@@ -220,7 +291,7 @@ clubs_member_list = ClubsMemberViewSet.as_view({
 clubs_detail = ClubsViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
-    'patch': 'partial_update',
+    'patch': 'patch_update',
     'delete': 'destroy',
 
     'post': 'club_signin',

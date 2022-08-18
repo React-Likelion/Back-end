@@ -111,7 +111,7 @@ class LogSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PointSerializer(serializers.ModelSerializer):
-    serializer = LogSerializer(many=True)
+    log = LogSerializer(many=True)
     class Meta:
         model = User
         fields = ('id', 'nickname', 'point', 'log')

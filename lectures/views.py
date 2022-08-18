@@ -115,7 +115,7 @@ class MypageViewSet(viewsets.ModelViewSet):
     def list(self, request):
         queryset = self.get_queryset().filter(writer_nickname=self.request.user).order_by('-id')
         #print(self.request.user)
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     
 class MypageLecturesViewSet(viewsets.ModelViewSet):
@@ -125,7 +125,7 @@ class MypageLecturesViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         queryset = Lectures.objects.filter(enroll_students__in=[self.request.user]).exclude(writer_nickname=self.request.user).order_by('-id')
-        serializer_class = LecturesSerializer
+        serializer_class = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     
 class MainPageViewSet(viewsets.ModelViewSet):
@@ -135,6 +135,6 @@ class MainPageViewSet(viewsets.ModelViewSet):
 
     def list(self, request):
         queryset = Lectures.objects.order_by('-like_cnt')[:4]
-        serializer_class = LecturesSerializer
+        serializer_class = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     

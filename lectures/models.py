@@ -92,4 +92,3 @@ class LikeMembers(models.Model):
 
     class Meta:
         db_table = 'like'
-

@@ -1,9 +1,9 @@
 import traceback
 from .models import User
 from .tokens import account_activation_token
-from .serializers import SignupSerializer, LoginSerializer
+from .serializers import SignupSerializer, LoginSerializer, PointSerializer
 
-from rest_framework import status, generics, views
+from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -89,3 +89,7 @@ class LoginView(generics.GenericAPIView):
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
         return response
+
+class PointViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = PointSerializer

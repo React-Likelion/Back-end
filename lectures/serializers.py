@@ -27,4 +27,7 @@ class LecturesSerializer(serializers.ModelSerializer):
         #fields = ['id', 'title', 'description', 'price', 'youtube_link', 'main_category', 'sub_category', 'writer', 'enroll_students', 'enroll_cnt', 'like_members', 'like_cnt', 'visit_cnt', 'create_date', 'writer', 'images']
         fields = '__all__'
 
-    
+
+
+
+

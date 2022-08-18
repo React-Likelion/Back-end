@@ -49,7 +49,7 @@ class SignupSerializer(serializers.ModelSerializer):
 
         message = render_to_string('account_activate_email.html', {
           'user': user,
-          'domain': 'localhost:8000',
+          'domain': 'https://port-0-back-end-14q6cqs24l6kns2t6.gksl1.cloudtype.app',
           'uid': urlsafe_base64_encode(force_bytes(user.pk)),
           'token': account_activation_token.make_token(user),
         })
@@ -96,9 +96,44 @@ class LoginSerializer(serializers.ModelSerializer):
             data = {
                 'user' : user.id, 
                 'email' : user.email,
+                'nickname' : user.nickname,
                 "message": "login successs",
                 'refresh_token' : str(token),
                 'access_token' : str(token.access_token)
             }   
             return data
         raise serializers.ValidationError("계정이 활성화 전입니다. 계정을 활성화하세요.")
+
+
+""" class LogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logs
+        fields = '__all__'
+
+class PointSerializer(serializers.ModelSerializer):
+    serializer = LogSerializer(many=True)
+    class Meta:
+        model = User
+        fields = ('id', 'nickname', 'point', 'log') """
+
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        required=True,
+        write_only = True,
+    )
+
+    password2 = serializers.CharField(write_only = True, required=True)
+    
+    class Meta:
+        model = User
+        fields = '__all__'
+        read_only_fields = ('email','point',)
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({
+                "password" : "Password fields didn't match"
+            })
+        
+        return data
+

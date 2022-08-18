@@ -1,10 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from . import views
+from .views import ClubsViewSet
 
 
 urlpatterns = [
     path('', views.clubs_list),
+    path('main/', views.mypage_list),
    
     path('by-newset/', views.clubs_new_list),
     path('by-member/', views.clubs_member_list),

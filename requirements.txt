@@ -1,5 +1,4 @@
 asgiref==3.5.2
-certifi @ file:///C:/Windows/TEMP/abs_e9b7158a-aa56-4a5b-87b6-c00d295b01fanefpc8_o/croots/recipe/certifi_1655968940823/work/certifi
 charset-normalizer==2.1.0
 coreapi==2.3.3
 coreschema==0.0.4
@@ -7,6 +6,7 @@ Django==4.0.6
 django-cors-headers==3.13.0
 django-filter==22.1
 djangorestframework==3.13.1
+djangorestframework-simplejwt==5.2.0
 drf-yasg==1.21.3
 idna==3.3
 inflection==0.5.1
@@ -16,15 +16,17 @@ MarkupSafe==2.1.1
 mysqlclient==2.1.1
 packaging==21.3
 Pillow==9.2.0
+PyJWT==2.4.0
 pyparsing==3.0.9
 python-dotenv==0.20.0
 pytz==2022.1
 requests==2.28.1
 ruamel.yaml==0.17.21
 ruamel.yaml.clib==0.2.6
+six==1.16.0
 sqlparse==0.4.2
 tzdata==2022.1
 uritemplate==4.1.1
 urllib3==1.26.11
 wincertstore==0.2
-windows-curses==2.3.0
+

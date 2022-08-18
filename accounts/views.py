@@ -1,16 +1,17 @@
 import traceback
 from .models import User
 from .tokens import account_activation_token
-from .serializers import SignupSerializer, LoginSerializer
+from .serializers import SignupSerializer, LoginSerializer, UserSerializer
 
-from rest_framework import status, generics, views
+from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
+from django.shortcuts import redirect
 
 
 class UserListView(generics.ListAPIView):
@@ -64,7 +65,7 @@ class UserActivate(views.APIView):
             if user is not None and account_activation_token.check_token(user, token):
                user.is_active = True
                user.save()
-               return HttpResponse(user.email + '계정이 활성화 되었습니다', status=status.HTTP_200_OK)
+               return redirect("http://localhost:3000/login")
             else:
                return HttpResponse('만료된 링크입니다', status=status.HTTP_400_BAD_REQUEST)
 
@@ -88,3 +89,31 @@ class LoginView(generics.GenericAPIView):
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
         return response
+
+
+""" class PointViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = PointSerializer
+ """
+
+class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated,]
+    
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def patch(self, request):
+        serializer = self.get_serializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            res = Response(
+                {
+                    "user": serializer.data,
+                    "message": "update successs",
+                },
+                status=status.HTTP_200_OK,
+            )
+            
+            return res
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

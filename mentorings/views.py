@@ -5,8 +5,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 #from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
 from django.shortcuts import redirect
@@ -14,7 +13,6 @@ from django.db.models import Q
 
 #멘토링 CRUD
 class MentoringViewSet(viewsets.ModelViewSet):
-    #permission_classes = [AllowAny,]
     queryset=mentorings.objects.all().order_by('-create_date')
     serializer_class=serializers.MentoringSerializers
     permission_classes=[IsAuthenticatedOrReadOnly]
@@ -50,13 +48,47 @@ class MentoringViewSet(viewsets.ModelViewSet):
         return queryset
     
     def perform_create(self, serializer):
+        temp=[]
+        member=get_object_or_404(User, nickname=self.request.user)
+        temp+=[member]
+        serializer.save(User=temp)        
         serializer.save(user_id=self.request.user)
         serializer.save(member_cnt=1)
         serializer.save(nickname=self.request.user.nickname)                
         
     @action(detail=False)    
     def listbycnt(self, request, *args, **kwargs):
-        queryset = mentorings.objects.all().order_by('-member_cnt')
+        queryset = mentorings.objects.all().order_by('-member_cnt','-create_date')
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False)    
+    def make(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        writer=request.user.nickname
+        queryset=queryset.filter(nickname=writer)
+        
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+        
+    @action(detail=False)    
+    def register(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        user_id=request.user.id
+        nickname=request.user.nickname
+        print(user_id)
+        queryset = queryset.filter(User__in=[user_id]).exclude(nickname=nickname)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -65,7 +97,12 @@ class MentoringViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)    
-        
+
+    @action(detail=False)
+    def main(self, request):
+        queryset = self.get_queryset().order_by('-id')[:4]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 #멘토링 챗 CRUD    
 class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
@@ -86,8 +123,8 @@ class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
         #manytomany테이블에 추가
         mentoring.User.add(member)
         #인원수 증가
-        mentoring_member=mentorings.objects.annotate(count=Count('User'))
-        mentoring.member_cnt=mentoring_member[pk-1].count+1
+        mentoring_member=mentorings.objects.annotate(count=Count('User')).filter(id=pk)
+        mentoring.member_cnt=mentoring_member[0].count
         mentoring.save()
 
         page = self.paginate_queryset(queryset)
@@ -107,7 +144,6 @@ class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
         #manytomany테이블에서 삭제
         mentoring.User.remove(member)
         #인원수 감소
-        mentoring_member=mentorings.objects.annotate(count=Count('User'))
-        mentoring.member_cnt=mentoring_member[pk-1].count+1
-        mentoring.save()
+        mentoring_member=mentorings.objects.annotate(count=Count('User')).filter(id=pk)
+        mentoring.member_cnt=mentoring_member[0].count
         return redirect('/mentorings')

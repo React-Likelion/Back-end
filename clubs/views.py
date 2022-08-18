@@ -38,6 +38,8 @@ def include_filter(queryset, request):
 
 class ClubsViewSet(ModelViewSet):
     permission_classes = [AllowAny]
+    queryset = Clubs.objects.all().order_by('-id')
+    print(queryset)
     queryset = Clubs.objects.all()
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
@@ -77,14 +79,9 @@ class ClubsViewSet(ModelViewSet):
 
     @action(detail=False, method=['GET'])
     def club_list(self, request, *args, **kwargs):
-        print(self.queryset)
+        self.queryset = Clubs.objects.all().order_by('-id')
         if request.query_params:
             self.queryset = include_filter(self.queryset, request.query_params)
-        if request.data.get('sort_id', False):
-            self.queryset = self.queryset.order_by('-id')
-
-        elif request.data.get('sort_member', False):
-            self.queryset = self.queryset.annotate(member_cnt=Count('member')).order_by('-member_cnt')
         print(self.queryset)
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)

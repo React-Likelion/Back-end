@@ -1,7 +1,7 @@
 from unicodedata import category
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
-from .serializers import CommunitySerializers, CommunityCommentsSerializers, MainPageSerializer
+from .serializers import CommunitySerializers, CommunityCommentsSerializers
 from .models import Community, CommunityComments
 from rest_framework.response import Response
 from rest_framework import status
@@ -46,7 +46,7 @@ class CommunityCommentsViewset(viewsets.ModelViewSet):
 class MainPageViewset(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Community.objects.all().order_by('-create_time')[:5]
-    serializer_class = MainPageSerializer
+    serializer_class = CommunitySerializers
 
 class NoticeViewset(viewsets.ModelViewSet):
     permission_classes = [AllowAny]

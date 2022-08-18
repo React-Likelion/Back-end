@@ -55,7 +55,7 @@ class LecturesViewSet(viewsets.ModelViewSet):
     
     @action(detail=False)    
     def mypage(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(writer=self.request.user).order_by('-id')
+        queryset = self.get_queryset().filter(writer_nickname=self.request.user).order_by('-id')
         #print(self.request.user)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)

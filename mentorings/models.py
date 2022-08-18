@@ -57,7 +57,9 @@ class mentorings(models.Model):
     tag2=models.CharField(max_length=255, null=True, blank=False);
     tag3=models.CharField(max_length=255, null=True, blank=False);
 
-    image = models.ImageField(upload_to="%Y/%m/%d")
+    image = models.ImageField()
+    imageurl=models.URLField(null=True)
+    
     create_date=models.DateTimeField(auto_now_add=True);
     #member와 ManytoMany연결
     User=models.ManyToManyField(User, through='mentoringsTouser', related_name='Member');

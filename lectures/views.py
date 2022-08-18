@@ -52,27 +52,6 @@ class LecturesViewSet(viewsets.ModelViewSet):
         serializer = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    
-    @action(detail=False)    
-    def mypage(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(writer_nickname=self.request.user).order_by('-id')
-        #print(self.request.user)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-        
-    @action(detail=False)    
-    def mypagelectures(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(enroll_students__in=[self.request.user]).exclude(writer_nickname=self.request.user).order_by('-id')
-        print(self.request.user)
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)  
-    
-    @action(detail=False)
-    def main(self, request):
-        queryset = self.get_queryset().order_by('-like_cnt')[:4]
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-
     def retrieve(self, request, pk=None):
         view = Lectures.objects.get(id = pk)
         view.visit_cnt += 1 
@@ -128,3 +107,18 @@ class LecturesLikeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
+class MypageViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny,]
+    queryset = Lectures.objects.filter(writer_nickname=self.request.user).order_by('-id')
+    serializer_class = LecturesSerializer
+    
+class MypageLecturesViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny,]
+    queryset = Lectures.objects.filter(enroll_students__in=[self.request.user]).exclude(writer_nickname=self.request.user).order_by('-id')
+    serializer_class = LecturesSerializer
+    
+class MainPageViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny,]
+    queryset = Lectures.objects.order_by('-like_cnt')[:4]
+    serializer_class = LecturesSerializer
+    

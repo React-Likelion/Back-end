@@ -1,11 +1,11 @@
 import traceback
 from .models import User
 from .tokens import account_activation_token
-from .serializers import SignupSerializer, LoginSerializer
+from .serializers import SignupSerializer, LoginSerializer, UserSerializer
 
-from rest_framework import status, generics, views
+from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from django.utils.encoding import force_str
@@ -89,3 +89,31 @@ class LoginView(generics.GenericAPIView):
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
         return response
+
+
+""" class PointViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = PointSerializer
+ """
+
+class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated,]
+    
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def patch(self, request):
+        serializer = self.get_serializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            res = Response(
+                {
+                    "user": serializer.data,
+                    "message": "update successs",
+                },
+                status=status.HTTP_200_OK,
+            )
+            
+            return res
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

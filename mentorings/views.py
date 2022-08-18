@@ -104,6 +104,12 @@ class MentoringViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)    
 
+    @action(detail=False)
+    def main(self, request):
+        queryset = self.get_queryset().order_by('-id')[:4]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 #멘토링 챗 CRUD    
 class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
     #permission_classes = [AllowAny,]

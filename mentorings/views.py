@@ -26,6 +26,7 @@ class MentoringViewSet(viewsets.ModelViewSet):
         age_group=self.request.GET.getlist('age_group',None)
         field=self.request.GET.getlist('field',None)
         title=self.request.GET.get('title',None)
+        popular=self.request.GET.get('popular',None)
         
         filter_condition = Q()
 
@@ -43,8 +44,13 @@ class MentoringViewSet(viewsets.ModelViewSet):
 
         if title:
             filter_condition.add(Q(title=title), Q.AND)
-
-        queryset = queryset.filter(filter_condition).distinct().order_by('-create_date')
+            
+        if popular:
+            queryset = queryset.filter(filter_condition).distinct().order_by('-member_cnt', '-create_date')
+            
+        else:
+            queryset = queryset.filter(filter_condition).distinct().order_by('-create_date')
+        
         return queryset
     
     def perform_create(self, serializer):

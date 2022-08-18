@@ -39,7 +39,7 @@ class CommunityCommentsViewset(viewsets.ModelViewSet):
         #print (count_comments)
         Community.objects.filter(id=serializer.data.get('board_id')).update(comment_cnt=count_comments)
 
-<<<<<<< HEAD
+
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
 
@@ -54,9 +54,9 @@ class NoticeViewset(viewsets.ModelViewSet):
     serializer_class = CommunitySerializers
     filter_backends=[DjangoFilterBackend]
     filterset_fields=['category']
-=======
-    def retrieve(self, request, pk=None, pk1= None):
-        queryset = CommunityComments.objects.filter(board_id=pk).filter(id=pk1)
-        serializer = CommunityCommentsSerializers(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
->>>>>>> f126263 (CREATE mainpage, mypage, point, UPDATE community)
+
+    # def retrieve(self, request, pk=None, pk1= None):
+    #     queryset = CommunityComments.objects.filter(board_id=pk).filter(id=pk1)
+    #     serializer = CommunityCommentsSerializers(queryset, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+

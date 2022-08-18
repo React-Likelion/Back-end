@@ -274,7 +274,7 @@ class MypageViewSet(ModelViewSet):
     serializer_class = ClubsSerializer
 
 clubs_list = ClubsViewSet.as_view({
-    'get': 'list',
+    'get': 'club_list',
     'post': 'club_create',
 })
 

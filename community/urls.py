@@ -27,7 +27,7 @@ communitycomment_list = CommunityCommentsViewset.as_view({
 communitycomment_detail = CommunityCommentsViewset.as_view({
     'get': 'retrieve',
     'delete': 'destroy',
-    'patch': 'update',
+    'put': 'update',
 })
 
 mainpage_list = MainPageViewset.as_view({

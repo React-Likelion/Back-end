@@ -62,7 +62,8 @@ class LecturesViewSet(viewsets.ModelViewSet):
         
     @action(detail=False)    
     def mypagelectures(self, request, *args, **kwargs):
-        queryset = self.get_queryset().filter(enroll_students__in=[self.request.user]).exclude(writer=self.request.user).order_by('-id')
+        queryset = self.get_queryset().filter(enroll_students__in=[self.request.user]).exclude(writer_nickname=self.request.user).order_by('-id')
+        print(self.request.user)
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)  
     

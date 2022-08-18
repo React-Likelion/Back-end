@@ -1,7 +1,7 @@
 import traceback
 from .models import User
 from .tokens import account_activation_token
-from .serializers import SignupSerializer, LoginSerializer, UserSerializer
+from .serializers import SignupSerializer, LoginSerializer, UserSerializer, PointSerializer, UserPointSerializer
 
 from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
@@ -91,10 +91,13 @@ class LoginView(generics.GenericAPIView):
         return response
 
 
-""" class PointViewSet(viewsets.ModelViewSet):
+class PointViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = PointSerializer
- """
+
+class UserPointView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPointSerializer
 
 class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated,]

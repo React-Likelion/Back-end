@@ -1,7 +1,12 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.routers import DefaultRouter
 
-from accounts.views import UserListView, SignupView, UserActivate, LoginView, UserUpdateView
+from accounts.views import UserListView, SignupView, UserActivate, LoginView, UserUpdateView, PointViewSet, UserPointView
+
+#라우팅 설정
+router = DefaultRouter()
+router.register('', PointViewSet)
 
 #router = routers.DefaultRouter()
 #router.register(r'signup', SignupViewSet)
@@ -16,6 +21,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('activate/<str:uidb64>/<str:token>/', UserActivate.as_view(), name="activate"),
+    path('point/', UserPointView.as_view(), name='point'),
+    path('pointlog/', include(router.urls), name='pointlog')
     #path('point/', point_list)
     #path('', include(router.urls))
 ]

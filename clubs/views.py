@@ -20,11 +20,11 @@ def include_filter(queryset, request):
     for key, vals in request.items():
         print(key, vals)
         if len(vals) == 1:
-            queryset = queryset.filter(**{f"{key}__contains:{vals[0]}"})
+            queryset = queryset.filter(**{f"{key}__contains":vals[0]})
         else:
             queryset_list = []
             for val in vals:
-                queryset_list.append(queryset.filter(**{f"{key}__contains:{val}"}))
+                queryset_list.append(queryset.filter(**{f"{key}__contains":val}))
             
             queryset = queryset_list[0]
             for query in queryset_list[1:]:
@@ -73,13 +73,15 @@ class ClubsViewSet(ModelViewSet):
 
     @action(detail=False, method=['GET'])
     def club_list(self, request, *args, **kwargs):
+        print(self.queryset)
         if request.query_params:
             self.queryset = include_filter(self.queryset, request.query_params)
         if request.data.get('sort_id', False):
             self.queryset = self.queryset.order_by('-id')
 
-        elif request.data.get('sort_new', False):
+        elif request.data.get('sort_member', False):
             self.queryset = self.queryset.annotate(member_cnt=Count('member')).order_by('-member_cnt')
+        print(self.queryset)
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 

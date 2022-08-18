@@ -51,7 +51,7 @@ class Lectures(models.Model):
     sub_category = models.CharField(max_length=10,choices=SUB_CATEGORY)
 
     writer_nickname = models.ForeignKey(User, to_field='nickname', on_delete=models.CASCADE, related_name='writer')
-    writer_id = models.ForeignKey(User,on_delete=models.CASCADE, related_name='lecture_writer_id')
+   
     create_date = models.DateTimeField('CREATE DT', auto_now_add=True)
 
     enroll_students = models.ManyToManyField(User, symmetrical=False, through='EnrollStudents', through_fields=('lectures', 'user'), related_name='enroll_students', blank=True)

@@ -68,7 +68,7 @@ class LecturesViewSet(viewsets.ModelViewSet):
     
     @action(detail=False)
     def main(self, request):
-        queryset = self.get_queryset().order_by('-id')[:4]
+        queryset = self.get_queryset().order_by('-like_cnt')[:4]
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 

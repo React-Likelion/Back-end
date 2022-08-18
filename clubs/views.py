@@ -20,11 +20,11 @@ def include_filter(queryset, request):
     for key, vals in request.items():
         print(key, vals)
         if len(vals) == 1:
-            queryset = queryset.filter(**{f"{key}__contains":{val}})
+            queryset = queryset.filter(**{f"{key}__contains:{vals[0]}"})
         else:
             queryset_list = []
             for val in vals:
-                queryset_list.append(queryset.filter(**{f"{key}__contains":{val}}))
+                queryset_list.append(queryset.filter(**{f"{key}__contains:{val}"}))
             
             queryset = queryset_list[0]
             for query in queryset_list[1:]:

@@ -76,6 +76,13 @@ class ClubsViewSet(ModelViewSet):
     def club_list(self, request, *args, **kwargs):
         if request.query_params:
             self.queryset = include_filter(self.queryset, request.query_params)
+        
+        if request.data.get('sort_id', False):
+            self.queryset = self.queryset.order_by('-id')
+
+        elif request.data.get('sort_new', False):
+            self.queryset = self.queryset.annotate(member_cnt=Count('member')).order_by('-member_cnt')
+
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 

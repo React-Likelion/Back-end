@@ -22,8 +22,9 @@ from react.settings import MEDIA_URL, MEDIA_ROOT
 def include_filter(queryset, request):
     request = dict(request)
     for key, vals in request.items():
-        print(key, vals)
-        if len(vals) == 1:
+        if key == 'popular':
+            queryset = queryset.annotate(member_cnt=Count('member')).order_by('-member_cnt')
+        elif len(vals) == 1:
             queryset = queryset.filter(**{f"{key}__contains":vals[0]})
         else:
             queryset_list = []
@@ -38,7 +39,8 @@ def include_filter(queryset, request):
 
 class ClubsViewSet(ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Clubs.objects.all()
+    queryset = Clubs.objects.all().order_by('-id')
+    print(queryset)
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
@@ -77,14 +79,9 @@ class ClubsViewSet(ModelViewSet):
 
     @action(detail=False, method=['GET'])
     def club_list(self, request, *args, **kwargs):
-        print(self.queryset)
+        self.queryset = Clubs.objects.all().order_by('-id')
         if request.query_params:
             self.queryset = include_filter(self.queryset, request.query_params)
-        if request.data.get('sort_id', False):
-            self.queryset = self.queryset.order_by('-id')
-
-        elif request.data.get('sort_member', False):
-            self.queryset = self.queryset.annotate(member_cnt=Count('member')).order_by('-member_cnt')
         print(self.queryset)
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)

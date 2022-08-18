@@ -178,7 +178,9 @@ class ClubsMemberViewSet(ModelViewSet):
                 .order_by('-member_cnt')
     serializer_class = ClubsSerializer
 
-                
+class MypageViewSet(ModelViewSet):
+    queryset = Clubs.objects.all().order_by('-id')[:4]
+    serializer_class = ClubsSerializer
 
 clubs_list = ClubsViewSet.as_view({
     'get': 'list',
@@ -238,3 +240,6 @@ clubs_comments = CommentViewSet.as_view({
     'post': 'create',
 })
 
+mypage_list = MypageViewSet.as_view({
+    'get': 'list'
+})

@@ -14,9 +14,9 @@ from accounts.models import User
 from .models import *
 from .serializer import *
 
-import imgbbpy
-import urllib.request
-from react.settings import MEDIA_URL, MEDIA_ROOT
+# import imgbbpy
+# import urllib.request
+# from react.settings import MEDIA_URL, MEDIA_ROOT
 
 
 def include_filter(queryset, request):
@@ -103,20 +103,21 @@ class ClubsViewSet(ModelViewSet):
 
     
     def perform_create(self, serializer):
-        data=serializer.save()        
-        client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
-        temp=data.image
-        root='http://127.0.0.1:8000'+MEDIA_URL
-        path=root+str(temp)
-        #tempmediaroot=str(MEDIA_ROOT)
-        pathtemp='media/a.jpg'
-        print(f"path: {path}, pathtemp: {pathtemp}")
-        print('111111111111111111111111111111')
-        urllib.request.urlretrieve(path, pathtemp)
-        image = client.upload(file=pathtemp)
-        print(image.url)
+        serializer.save() 
+#         data=serializer.save()        
+#         client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
+#         temp=data.image
+#         root='http://127.0.0.1:8000'+MEDIA_URL
+#         path=root+str(temp)
+#         #tempmediaroot=str(MEDIA_ROOT)
+#         pathtemp='media/a.jpg'
+#         print(f"path: {path}, pathtemp: {pathtemp}")
+#         print('111111111111111111111111111111')
+#         urllib.request.urlretrieve(path, pathtemp)
+#         image = client.upload(file=pathtemp)
+#         print(image.url)
         
-        serializer.save(imageurl=image.url)
+#         serializer.save(imageurl=image.url)
     
     @action(detail=True, method=['POST'])
     def club_signin(self, request, **kwargs):
@@ -218,20 +219,20 @@ class GalleriesViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         serializer.save()
-        data=serializer.save()        
-        client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
-        temp=data.image
-        root='http://127.0.0.1:8000'+MEDIA_URL
-        path=root+str(temp)
-        #tempmediaroot=str(MEDIA_ROOT)
-        pathtemp='media/a.jpg'
-        print(f"path: {path}, pathtemp: {pathtemp}")
-        print('111111111111111111111111111111')
-        urllib.request.urlretrieve(path, pathtemp)
-        image = client.upload(file=pathtemp)
-        print(image.url)
+#         data=serializer.save()        
+#         client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
+#         temp=data.image
+#         root='http://127.0.0.1:8000'+MEDIA_URL
+#         path=root+str(temp)
+#         #tempmediaroot=str(MEDIA_ROOT)
+#         pathtemp='media/a.jpg'
+#         print(f"path: {path}, pathtemp: {pathtemp}")
+#         print('111111111111111111111111111111')
+#         urllib.request.urlretrieve(path, pathtemp)
+#         image = client.upload(file=pathtemp)
+#         print(image.url)
         
-        serializer.save(imageurl=image.url)
+#         serializer.save(imageurl=image.url)
         return Response(serializer.data)
 
 

@@ -1,4 +1,4 @@
-from .models import User
+from .models import User, Logs
 from .tokens import account_activation_token
 from rest_framework import serializers, status
 from rest_framework.response import Response
@@ -103,3 +103,42 @@ class LoginSerializer(serializers.ModelSerializer):
             }   
             return data
         raise serializers.ValidationError("계정이 활성화 전입니다. 계정을 활성화하세요.")
+
+
+class LogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Logs
+        fields = '__all__'
+
+class PointSerializer(serializers.ModelSerializer):
+    serializer = LogSerializer(many=True)
+    class Meta:
+        model = User
+        fields = ('id', 'nickname', 'point', 'log')
+
+class UserPointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'nickname', 'point')
+
+class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        required=True,
+        write_only = True,
+    )
+
+    password2 = serializers.CharField(write_only = True, required=True)
+    
+    class Meta:
+        model = User
+        fields = '__all__'
+        read_only_fields = ('email','point',)
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({
+                "password" : "Password fields didn't match"
+            })
+        
+        return data
+

@@ -55,7 +55,7 @@ LOCATIIONS = [
 
 class Clubs(models.Model):
     id = models.BigAutoField(primary_key=True)
-    leader_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, related_name='leader')
+    leader_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leader')
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
     field = models.CharField(max_length=20, choices=CATEGORY)
@@ -70,17 +70,17 @@ class Clubs(models.Model):
         return self.member.all().count()
 
 
-#? 용도를 잘 모르겠습니다.
 class ClubMembers(models.Model):
     id = models.BigAutoField(primary_key=True)
-    club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE)
-    member_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
+    club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE, related_name='club_members')
+    member_cnt = models.IntegerField(default=0)
 
 
 class Clubboard(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
-    writer_id= models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
+    writer_id= models.ForeignKey(User, on_delete=models.CASCADE, db_column='writer_id', related_name='writer_id')
+    writer_nickname= models.ForeignKey(User, to_field='nickname',on_delete=models.CASCADE, db_column='writer_nickname', related_name='writer_nickname')
     title = models.TextField()
     description = models.TextField()
     image = models.ImageField(blank=True, upload_to="clubs/", null=True)
@@ -93,15 +93,15 @@ class Clubboard_comment(models.Model):
     id = models.BigAutoField(primary_key=True)
     content = models.TextField()
     create_time = models.DateTimeField(auto_now_add=True)
-    writer_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE)
-    board_id = models.ForeignKey("Clubboard", on_delete=models.CASCADE)
+    writer_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    board_id = models.ForeignKey(Clubboard, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
 
 class Galleries(models.Model):
     id = models.BigAutoField(primary_key=True)
-    club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
-    writer_id = models.ForeignKey("accounts.User", on_delete=models.CASCADE, db_column='writer_id')
+    club_id= models.ForeignKey(Clubs, on_delete=models.CASCADE, db_column='club_id')
+    writer_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='writer_id')
     title = models.CharField(max_length=20)
     image = models.ImageField(blank=True, upload_to="clubs/", null=True)
     imageurl=models.URLField(null=True)

@@ -50,7 +50,8 @@ class Lectures(models.Model):
     main_category = models.CharField(max_length=10,choices=MAIN_CATEGORY)
     sub_category = models.CharField(max_length=10,choices=SUB_CATEGORY)
 
-    writer = models.ForeignKey(User, to_field='nickname', on_delete=models.CASCADE, related_name='writer')
+    writer_nickname = models.ForeignKey(User, to_field='nickname', on_delete=models.CASCADE, related_name='writer')
+   
     create_date = models.DateTimeField('CREATE DT', auto_now_add=True)
 
     enroll_students = models.ManyToManyField(User, symmetrical=False, through='EnrollStudents', through_fields=('lectures', 'user'), related_name='enroll_students', blank=True)
@@ -61,7 +62,7 @@ class Lectures(models.Model):
 
     visit_cnt = models.IntegerField(default = 0)
 
-    image1 = models.ImageField(blank=True, upload_to="lectures/", null=True)
+    image1 = models.ImageField(upload_to="lectures/")
     image2 = models.ImageField(blank=True, upload_to="lectures/", null=True)
     image3 = models.ImageField(blank=True, upload_to="lectures/", null=True)
     image4 = models.ImageField(blank=True, upload_to="lectures/", null=True)
@@ -91,4 +92,3 @@ class LikeMembers(models.Model):
 
     class Meta:
         db_table = 'like'
-

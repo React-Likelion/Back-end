@@ -11,9 +11,8 @@ class MentoringSerializers(serializers.ModelSerializer):
         )
     class Meta:
         model=models.mentorings
-        exclude=['member_cnt']
-
-
+        exclude=['create_date']
+       
 class Mentoring_chatsSerializers(serializers.ModelSerializer):
     class Meta:
         model=models.mentoring_chats

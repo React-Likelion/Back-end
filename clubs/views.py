@@ -44,9 +44,9 @@ class ClubsViewSet(ModelViewSet):
         def update(request, *args, **kwargs):
             partial = kwargs.pop('partial', False)
             instance = self.get_object()
-            next_leader = User.objects.get(nickname=request.data['nickname'], None)
-            
-            if next_leader is None:
+            try:
+                next_leader = User.objects.get(nickname=request.data['nickname'])
+            except:
                 return Response(status=status.HTTP_404_NOT_FOUND)
                 
             next_leader = next_leader.id

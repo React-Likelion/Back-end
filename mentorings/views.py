@@ -123,6 +123,18 @@ class MentoringViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)    
 
+    @action(detail=True)
+    def withdraw(self, request, pk, *args, **kwargs):
+        mentoring=get_object_or_404(mentorings,id=pk)
+        member=get_object_or_404(User, nickname=request.user)
+        #manytomany테이블에서 삭제
+        mentoring.User.remove(member)
+        #인원수 감소
+        mentoring_member=mentorings.objects.annotate(count=Count('User')).filter(id=pk)
+        mentoring.member_cnt=mentoring_member[0].count
+        mentoring.save()
+        return redirect('/mentorings')
+
     @action(detail=False)
     def main(self, request):
         queryset = self.get_queryset().order_by('-id')[:4]
@@ -160,13 +172,3 @@ class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
     
-    @action(detail=False)
-    def withdraw(self, request, pk, *args, **kwargs):
-        mentoring=get_object_or_404(mentorings,id=pk)
-        member=get_object_or_404(User, nickname=request.user)
-        #manytomany테이블에서 삭제
-        mentoring.User.remove(member)
-        #인원수 감소
-        mentoring_member=mentorings.objects.annotate(count=Count('User')).filter(id=pk)
-        mentoring.member_cnt=mentoring_member[0].count
-        return redirect('/mentorings')

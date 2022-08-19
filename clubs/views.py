@@ -42,7 +42,7 @@ class ClubsViewSet(ModelViewSet):
 
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['name', 'field', 'location', 'age_group']
+    search_fields = ['title', 'field', 'location', 'age_group']
 
     @action(detail=True, method=['PATCH'])
     def patch_update(self, request, *args, **kwargs):

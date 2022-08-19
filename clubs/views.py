@@ -22,8 +22,9 @@ from .serializer import *
 def include_filter(queryset, request):
     request = dict(request)
     for key, vals in request.items():
-        print(key, vals)
-        if len(vals) == 1:
+        if key == 'popular':
+            queryset = queryset.annotate(member_cnt=Count('member')).order_by('-member_cnt')
+        elif len(vals) == 1:
             queryset = queryset.filter(**{f"{key}__contains":vals[0]})
         else:
             queryset_list = []
@@ -33,14 +34,12 @@ def include_filter(queryset, request):
             queryset = queryset_list[0]
             for query in queryset_list[1:]:
                 queryset = queryset | query
-    print(queryset)
     return queryset
 
 class ClubsViewSet(ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Clubs.objects.all().order_by('-id')
-    print(queryset)
-    queryset = Clubs.objects.all()
+
     serializer_class = ClubsSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
@@ -76,7 +75,6 @@ class ClubsViewSet(ModelViewSet):
         self.queryset = Clubs.objects.all().order_by('-id')
         if request.query_params:
             self.queryset = include_filter(self.queryset, request.query_params)
-        print(self.queryset)
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 
@@ -161,7 +159,6 @@ class ClubsArticleViewSet(ModelViewSet):
         article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
 
         if request.query_params:
-            print(request.query_params)
             article_query = include_filter(article_query, request.query_params)
 
         serializer = self.get_serializer(article_query, many=True)
@@ -205,7 +202,6 @@ class GalleriesViewSet(ModelViewSet):
         request.data._mutable = True
         request.data['club_id'] = str(self.kwargs.get('club_pk', ''))
         request.data._mutable = False
-        print(request.data)
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()

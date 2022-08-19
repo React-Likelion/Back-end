@@ -6,7 +6,7 @@ from .views import ClubsViewSet
 
 urlpatterns = [
     path('', views.clubs_list),
-    path('main/', views.mypage_list),
+    path('main/', views.main_list),
      path('signed/<int:pk>/', views.signed_club),
     path('made/<int:pk>/', views.made_club),
    

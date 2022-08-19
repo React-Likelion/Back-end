@@ -303,6 +303,7 @@ class MakeClubViewSet(ModelViewSet):
         return Response(data=data)
 
 class MainViewSet(ModelViewSet):
+    permission_classes = [AllowAny]
     queryset = Clubs.objects.all().order_by('-id')[:4]
     serializer_class = ClubsSerializer
     

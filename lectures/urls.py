@@ -41,8 +41,8 @@ main_list = MainPageViewSet.as_view({
 
 
 urlpatterns =[
-    path('', lectures_list),
-    path('<int:pk>/', lectures_detail),
+    path('', include(lectures_router.urls)),
+    #path('<int:pk>/', lectures_detail),
     path('mypage/', mypage_list),
     path('mypagelectures/', mypagelectures_list),
     path('main/', main_list),

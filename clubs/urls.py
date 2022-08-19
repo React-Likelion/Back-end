@@ -7,7 +7,7 @@ from .views import ClubsViewSet
 urlpatterns = [
     path('', views.clubs_list),
     path('main/', views.main_list),
-     path('signed/<int:pk>/', views.signed_club),
+    path('signed/<int:pk>/', views.signed_club),
     path('made/<int:pk>/', views.made_club),
    
     path('by-newset/', views.clubs_new_list),

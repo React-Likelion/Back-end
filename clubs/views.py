@@ -71,12 +71,6 @@ class ClubsViewSet(ModelViewSet):
         kwargs['partial'] = True
         return update(request, *args, **kwargs)
 
-    @action(detail=False)
-    def main(self, request):
-        queryset = self.get_queryset().order_by('-id')[:4]
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
-
     @action(detail=False, method=['GET'])
     def club_list(self, request, *args, **kwargs):
         self.queryset = Clubs.objects.all().order_by('-id')
@@ -308,9 +302,11 @@ class MakeClubViewSet(ModelViewSet):
         data = json.dumps(data)
         return Response(data=data)
 
-class MypageViewSet(ModelViewSet):
+class MainViewSet(ModelViewSet):
     queryset = Clubs.objects.all().order_by('-id')[:4]
     serializer_class = ClubsSerializer
+    
+ 
 
 clubs_list = ClubsViewSet.as_view({
     'get': 'club_list',
@@ -377,6 +373,6 @@ clubs_comments = CommentViewSet.as_view({
     'post': 'create',
 })
 
-mypage_list = MypageViewSet.as_view({
+main_list = MypageViewSet.as_view({
     'get': 'list'
 })

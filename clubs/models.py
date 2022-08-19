@@ -56,7 +56,7 @@ LOCATIIONS = [
 class Clubs(models.Model):
     id = models.BigAutoField(primary_key=True)
     leader_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leader')
-    title = models.CharField(max_length=20)
+    name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
     field = models.CharField(max_length=20, choices=CATEGORY)
     location = models.CharField(max_length=20, choices=LOCATIIONS)

@@ -373,6 +373,6 @@ clubs_comments = CommentViewSet.as_view({
     'post': 'create',
 })
 
-main_list = MypageViewSet.as_view({
+main_list = MainViewSet.as_view({
     'get': 'list'
 })

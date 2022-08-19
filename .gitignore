@@ -6,6 +6,7 @@
 .idea
 .idea/*.xml
 .env
+.sqlite3
 ### Django ###
 migrations/
 

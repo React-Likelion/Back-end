@@ -9,7 +9,7 @@ lectures_router.register('', LecturesViewSet)
 
 lectures_list = LecturesViewSet.as_view({
     'get': 'list',
-    'post': 'perform_create',
+    'post': 'create',
 })
 
 lectures_detail = LecturesViewSet.as_view({
@@ -41,8 +41,9 @@ main_list = MainPageViewSet.as_view({
 
 
 urlpatterns =[
-    path('', include(lectures_router.urls)),
-    #path('<int:pk>/', lectures_detail),
+    #path('', include(lectures_router.urls)),
+    path('', lectures_list),
+    path('<int:pk>/', lectures_detail),
     path('mypage/', mypage_list),
     path('mypagelectures/', mypagelectures_list),
     path('main/', main_list),

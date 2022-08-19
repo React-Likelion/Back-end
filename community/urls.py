@@ -40,12 +40,16 @@ notice_list = NoticeViewset.as_view({
 
 
 urlpatterns = [
-    path('',community_list),
-    path('<int:pk>/',community_detail),
+    path('',include(router.urls)),
+        
+    #http://127.0.0.1:8000/mentorings/1/mentoring-chats/
+    path('<int:pk>/comments/', include(com_router.urls)),    
+    #path('',community_list),
+    #path('<int:pk>/',community_detail),
 
     path('main/', mainpage_list),
     path('notice/', notice_list),
 
-    path('<int:pk>/comments/',communitycomment_list),
-    path('<int:pk>/comments/<int:pk1>/',communitycomment_detail)
+    #path('<int:pk>/comments/',communitycomment_list),
+    #path('<int:pk>/comments/<int:pk1>/',communitycomment_detail)
 ]

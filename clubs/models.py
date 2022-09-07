@@ -75,7 +75,7 @@ class ClubMembers(models.Model):
     club_id = models.ForeignKey("Clubs", on_delete=models.CASCADE, related_name='club_members')
     member_cnt = models.IntegerField(default=0)
 
-
+#이미지필드 삭제
 class Clubboard(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id= models.ForeignKey("Clubs", on_delete=models.CASCADE, db_column='club_id')
@@ -83,11 +83,14 @@ class Clubboard(models.Model):
     writer_nickname= models.ForeignKey(User, to_field='nickname',on_delete=models.CASCADE, db_column='writer_nickname', related_name='writer_nickname')
     title = models.TextField()
     description = models.TextField()
-    image = models.ImageField(blank=True, upload_to="clubs/", null=True)
     create_time = models.DateTimeField(auto_now_add=True)
     category = models.CharField(max_length=20)
     comment_cnt = models.IntegerField(default=0)
 
+#Clubsboard 이미지 모델 추가
+class Clubsboard_image(models.Model):
+    clubboard=models.ForeignKey(Clubboard, on_delete=models.CASCADE, related_name='clubs_image')
+    image = models.ImageField(blank=True, upload_to="clubs/", null=True)
 
 class Clubboard_comment(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -97,7 +100,7 @@ class Clubboard_comment(models.Model):
     board_id = models.ForeignKey(Clubboard, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
 
-
+#이미지 여러개
 class Galleries(models.Model):
     id = models.BigAutoField(primary_key=True)
     club_id= models.ForeignKey(Clubs, on_delete=models.CASCADE, db_column='club_id')

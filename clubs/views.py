@@ -149,6 +149,7 @@ class ClubsViewSet(ModelViewSet):
             return Response(content, status=status.HTTP_200_OK)
     
 
+#다중 이미지 업로드 수정
 class ClubsArticleViewSet(ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Clubboard.objects.all()
@@ -169,7 +170,7 @@ class ClubsArticleViewSet(ModelViewSet):
         request.data._mutable = True
         request.data['club_id'] = str(self.kwargs.get('club_pk', ''))
         request.data._mutable = False
-
+        
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         serializer.save()        
@@ -218,7 +219,6 @@ class GalleriesViewSet(ModelViewSet):
 #         urllib.request.urlretrieve(path, pathtemp)
 #         image = client.upload(file=pathtemp)
 #         print(image.url)
-        
 #         serializer.save(imageurl=image.url)
         return Response(serializer.data)
 

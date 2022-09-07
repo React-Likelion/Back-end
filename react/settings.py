@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'corsheaders',
     'django_filters',
+    'rest_framework_simplejwt.token_blacklist',
 
     # Installed Apps
     'accounts',

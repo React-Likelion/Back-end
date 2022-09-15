@@ -11,21 +11,25 @@ from accounts.models import User
 from .models import *
 from .serializer import *
 
-# import imgbbpy
-# import urllib.request
-# from react.settings import MEDIA_URL, MEDIA_ROOT
-
 
 # 검색 필터 기능
+# 포함관계를 처리하기 위한 필터
 def include_filter(queryset, request):
     request = dict(request)
+    
+    # key가 popular라면, 멤버 순 정렬
+    # val들을 모두 포함하는 query만 필터링
     for key, vals in request.items():
         if key == 'popular':
             queryset = queryset.annotate(member_cnt=Count('member')).order_by('-member_cnt')
         
         # __contains loop를 통한 다중 필터링
+        # 1. x_contains는 x를 포함하고 있는 query를 판정.
+        # 2. x_contains를 반복하여 모든 val들만을 포함하는 것만 남김.
         elif len(vals) == 1:
             queryset = queryset.filter(**{f"{key}__contains":vals[0]})
+        
+        # filter 항목이 여러 개일 경우, list형태로 처리 후 -> queryset 형태로 변환
         else:
             queryset_list = []
             for val in vals:
@@ -45,9 +49,11 @@ class ClubsViewSet(ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['name', 'field', 'location', 'age_group']
 
+    # Update method override 형태
     @action(detail=True, method=['PATCH'])
     def patch_update(self, request, *args, **kwargs):
-        # update overiding
+        
+        # nickname을 pk로 update하는 method
         def update(request, *args, **kwargs):
             partial = kwargs.pop('partial', False)
             instance = self.get_object()
@@ -57,7 +63,9 @@ class ClubsViewSet(ModelViewSet):
                 return Response(status=status.HTTP_404_NOT_FOUND)
                 
             next_leader = next_leader.id
+            
             # leader_id 변조 방지
+            # 변경 불가 상태를 풀고 강제로 값을 고정후, 다시 변경 불가 상태
             request.data._mutable = True
             request.data['leader_id'] = next_leader
             request.data._mutable = False
@@ -73,22 +81,25 @@ class ClubsViewSet(ModelViewSet):
         kwargs['partial'] = True
         return update(request, *args, **kwargs)
 
-    # filtering & sort 기능의 list
+
+    # filtering & sort 기능의 list method
     @action(detail=False, method=['GET'])
     def club_list(self, request, *args, **kwargs):
         self.queryset = Clubs.objects.all().order_by('-id')
-        # query들로 filter
+        
+        # query들로 다중 filtering
         if request.query_params:
             self.queryset = include_filter(self.queryset, request.query_params)
         serializer = self.get_serializer(self.queryset, many=True)
         return Response(serializer.data)
 
-    # sort 기능의 create 
+    # sort 기능의 create method 
     @action(detail=False, method=['POST'])
     def club_create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+
         club = Clubs.objects.all().order_by('-id')[0] 
         new_club = ClubMembers(club_id=club)
         new_club.save()
@@ -98,21 +109,6 @@ class ClubsViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save()
-        # img_hosting 레거시 코드
-#         data=serializer.save()        
-#         client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
-#         temp=data.image
-#         root='http://127.0.0.1:8000'+MEDIA_URL
-#         path=root+str(temp)
-#         #tempmediaroot=str(MEDIA_ROOT)
-#         pathtemp='media/a.jpg'
-#         print(f"path: {path}, pathtemp: {pathtemp}")
-#         print('111111111111111111111111111111')
-#         urllib.request.urlretrieve(path, pathtemp)
-#         image = client.upload(file=pathtemp)
-#         print(image.url)
-        
-#         serializer.save(imageurl=image.url)
     
     #club 가입 & 탈퇴 기능
     # request에 out이 존재하면 탈퇴기능, 없으면 가입 기능으로 동작합니다.
@@ -125,6 +121,7 @@ class ClubsViewSet(ModelViewSet):
         sign_out = request.data.get('out', None)
         member_list = club.member.all()
 
+        # sign_id가 존재 하지 않는 경우, 예외처리
         if sign_id is None:
             content = {'error': 'none_id'}
             return Response(content, status=status.HTTP_403_FORBIDDEN)
@@ -139,13 +136,16 @@ class ClubsViewSet(ModelViewSet):
             else:
                 content = {'error': 'not register in club!'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
+        
         # 가입 기능으로 처리할 경우
         else:
             if User.objects.get(id=sign_id) in member_list:
                 content = {'error': 'already signed!'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
             
+            #list 타입으로 검색되어 0-index 추출
             club_member = ClubMembers.objects.filter(club_id__id=club.id)[0]
+            # 가입 인원 제한 처리
             if club_member.member_cnt >= club.limit:
                 content = {'error': 'club is already full!'}
                 return Response(content, status=status.HTTP_403_FORBIDDEN)
@@ -168,15 +168,19 @@ class ClubsArticleViewSet(ModelViewSet):
     @action(detail=True, methods=['GET'])
     def article_list(self, request, **kwargs):
         article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
-
+        
+        # query로 다중 filtering 적용
         if request.query_params:
             article_query = include_filter(article_query, request.query_params)
 
         serializer = self.get_serializer(article_query, many=True)
         return Response(serializer.data)
     
+    # 변조 방지를 추가한 create method
     @action(detail=True, methods=['POST'])
     def article_create(self, request, **kwargs):
+        # 변경 불가상태 해제 후, article이 써지는 club_pk 변경
+        # 다시 변경 불가상태 설정
         request.data._mutable = True
         request.data['club_id'] = str(self.kwargs.get('club_pk', ''))
         request.data._mutable = False
@@ -203,16 +207,18 @@ class GalleriesViewSet(ModelViewSet):
     def gallery_list(self, request, **kwargs):
         article_query = self.queryset.filter(club_id=self.kwargs.get('club_pk', ''))
         
-        # query들로 filter 적용
+        # query들로 다중 filtering 적용
         if request.query_params:
             article_query = include_filter(article_query, request.query_params)
 
         serializer = self.get_serializer(article_query, many=True)
         return Response(serializer.data)
     
+    # 변조방지를 추가한 gallery create method
     @action(detail=True, methods=['POST'])
     def gallery_create(self, request, **kwargs):
-        # club_pk 변조방지
+        # 변경 불가상태 해제 후, gallery가 소속된 club_id 강제로 지정
+        # 변경 불가상태 다시 지정
         request.data._mutable = True
         request.data['club_id'] = str(self.kwargs.get('club_pk', ''))
         request.data._mutable = False
@@ -220,19 +226,6 @@ class GalleriesViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid()
         serializer.save()
-#         data=serializer.save()        
-#         client = imgbbpy.SyncClient('2e06ba182c51139ee0f81b7cfd52181c')
-#         temp=data.image
-#         root='http://127.0.0.1:8000'+MEDIA_URL
-#         path=root+str(temp)
-#         #tempmediaroot=str(MEDIA_ROOT)
-#         pathtemp='media/a.jpg'
-#         print(f"path: {path}, pathtemp: {pathtemp}")
-#         print('111111111111111111111111111111')
-#         urllib.request.urlretrieve(path, pathtemp)
-#         image = client.upload(file=pathtemp)
-#         print(image.url)
-#         serializer.save(imageurl=image.url)
         return Response(serializer.data)
 
 
@@ -245,7 +238,8 @@ class CommentViewSet(ModelViewSet):
     def get_comment(self, request, **kwargs):
         comment = self.queryset.filter(id=self.kwargs.get('comment_pk'), board_id=self.kwargs.get('pk'))
         
-        # 최초 코멘트 일때, 대댓글 전부 chaining
+        # 최초 코멘트 일때, 대댓글들도 다들 포함
+        # prent 인자가 비었으면 부모
         if not comment[0].parent:
             alpha_comment = self.queryset.filter(parent=comment[0].id)
             comment = list(chain(comment, alpha_comment))
@@ -261,8 +255,7 @@ class CommentViewSet(ModelViewSet):
         return Response(serializer.data)
     
     
-
-    
+    # 재사용 가능한 legacy-code 
     """ @action(detail=True, methods=['POST'])
     def addcomment(self, request, **kwargs):
         serializer = CommentSerializer(data=request.data)
@@ -290,6 +283,7 @@ class ClubsMemberViewSet(ModelViewSet):
 
 class SignedClubViewSet(ModelViewSet):
     queryset = Clubs.objects.all()
+    
     # 소속된 모든 clubs을 json으로 return
     @action(detail=True, methods=['GET'])
     def get_signed_club(self, request, **kwargs):
@@ -304,6 +298,7 @@ class SignedClubViewSet(ModelViewSet):
 
 class MakeClubViewSet(ModelViewSet):
     queryset = Clubs.objects.all()
+    
     # 제작한 모든 clubs를 json으로 return
     @action(detail=True, methods=['GET'])
     def get_made_club(self, request, **kwargs):

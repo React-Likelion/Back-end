@@ -46,7 +46,7 @@ class LecturesViewSet(viewsets.ModelViewSet):
 
         '''
         < 검색 기능 >
-        ?
+        ?search_list = {search_value}
             ex) https://port-0-back-end-14q6cqs24l6kns2t6.gksl1.cloudtype.app/lectures/?main_category=외국어
         '''
         search_list = {"title":title, "main_category":main_category, "sub_category":sub_category}
@@ -64,6 +64,7 @@ class LecturesViewSet(viewsets.ModelViewSet):
         serializer = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # 강의를 조회하면 조회수 증가
     def retrieve(self, request, pk=None):
         view = Lectures.objects.get(id = pk)
         view.visit_cnt += 1 
@@ -72,22 +73,25 @@ class LecturesViewSet(viewsets.ModelViewSet):
         
         return Response(data, status=status.HTTP_202_ACCEPTED)
 
-
+# 강의 등록 리스트
 class LecturesEnrollViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 
+    # 강의 수강 신청 
     def update(self, request, pk=None):
         queryset = Lectures.objects.all()
 
         if request.user.is_authenticated:
             lectures = get_object_or_404(queryset, id=pk)
             #print(lectures)
+            # 강의 수강 취소
             if lectures.enroll_students.filter(pk=request.user.pk).exists():
                 lectures.enroll_students.remove(request.user)
                 Lectures.objects.filter(id=pk).update(enroll_cnt=F('enroll_cnt')-1)
             else:
+                # 강의 수강 신청 및 포인트 결제
                 lectures.enroll_students.add(request.user)
                 Lectures.objects.filter(id=pk).update(enroll_cnt=F('enroll_cnt')+1)
                 prices = Lectures.objects.get(id=pk).price
@@ -98,6 +102,7 @@ class LecturesEnrollViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
+# 강의 좋아요 
 class LecturesLikeViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
@@ -110,36 +115,43 @@ class LecturesLikeViewSet(viewsets.ModelViewSet):
             lectures = get_object_or_404(queryset, id=pk)
 
             if lectures.like_members.filter(pk=request.user.pk).exists():
+                # 강의 좋아요 취소
                 lectures.like_members.remove(request.user)
                 Lectures.objects.filter(id=pk).update(like_cnt=F('like_cnt')-1)
             else:
+                # 강의 좋아요 
                 lectures.like_members.add(request.user)
                 Lectures.objects.filter(id=pk).update(like_cnt=F('like_cnt')+1)
             
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
 
+# 마이페이지에 보여질 내가 등록한 강의 리스트
 class MypageViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 
     def list(self, request):
+        # 생성시간의 오름차순 리스트를 default로 설정
         queryset = self.get_queryset().filter(writer_nickname=self.request.user).order_by('-id')
         #print(self.request.user)
         serializer = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     
+# 마이페이지에 보여질 내가 수강 중인 강의 리스트
 class MypageLecturesViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 
     def list(self, request):
+        # 생성시간의 오름차순 리스트를 default로 설정
         queryset = Lectures.objects.filter(enroll_students__in=[self.request.user]).exclude(writer_nickname=self.request.user).order_by('-id')
         serializer = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-    
+
+# 메인페이지에 보여질 강의 리스트
 class MainPageViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()

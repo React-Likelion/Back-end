@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 class LecturesSerializer(serializers.ModelSerializer):
     
+    # 강의 수강 학생 Many To Many Field
     enroll_students = serializers.SlugRelatedField(
         many=True,
         slug_field="nickname", 
@@ -13,7 +14,7 @@ class LecturesSerializer(serializers.ModelSerializer):
         #write_only =True
         read_only = False
         )
-    
+    # 강의 좋아요 누른 회원 Many To Many Field
     like_members = serializers.SlugRelatedField(
         many=True,
         slug_field="nickname", 

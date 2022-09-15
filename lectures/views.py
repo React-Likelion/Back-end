@@ -1,21 +1,22 @@
-from django.shortcuts import get_object_or_404
-from django.db.models import F, Q
-from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.decorators import action
-
-from .serializers import LecturesSerializer
 from .models import Lectures
 from accounts.models import User, Logs
+from .serializers import LecturesSerializer
 
+from django.shortcuts import get_object_or_404
+from django.db.models import F, Q
 
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+
+# lecture
 class LecturesViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 
+    # 강의 등록 시 포인트 지급
     def perform_create(self, serializer):
         serializer.save()
         User.objects.filter(nickname=self.request.user).update(point=F('point')+1000)
@@ -28,8 +29,14 @@ class LecturesViewSet(viewsets.ModelViewSet):
 
 
     def list(self, request):
+        '''
+        < 리스트 정렬 querystring >
+        ?sort = 정렬 하고 싶은 것 (오름차순은 앞에 - 붙일 것!)
+            ex) https://port-0-back-end-14q6cqs24l6kns2t6.gksl1.cloudtype.app/lectures/?sort=-visit_cnt
+        '''
         if (request.GET.get('sort') != None):
             sort = request.GET.get('sort')
+            # 생성시간의 오름차순 리스트를 default로 설정
             data = Lectures.objects.all().order_by(sort,'-create_date')
         else:
             data = Lectures.objects.all().order_by('-create_date')
@@ -37,6 +44,11 @@ class LecturesViewSet(viewsets.ModelViewSet):
         main_category = request.GET.getlist('main_category')
         sub_category = request.GET.getlist('sub_category')
 
+        '''
+        < 검색 기능 >
+        ?
+            ex) https://port-0-back-end-14q6cqs24l6kns2t6.gksl1.cloudtype.app/lectures/?main_category=외국어
+        '''
         search_list = {"title":title, "main_category":main_category, "sub_category":sub_category}
         q = Q()
 

@@ -13,6 +13,7 @@ class CommunityCommentsSerializers(serializers.ModelSerializer):
         model = CommunityComments
         fields = '__all__'
     
+    # 대댓글 형식으로 묶어줌
     def get_reply(self, instance):
         serializer = self.__class__(instance.reply, many = True)
         serializer.bind('', self)

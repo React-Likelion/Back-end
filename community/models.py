@@ -1,12 +1,14 @@
 from django.db import models
 from accounts.models import User
 
+# category choice field
 CATEGORY = [
     ('공지','공지'),
     ('정보','정보'),
     ('자유','자유')
 ]
 
+# Community table 생성
 class Community(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.TextField()
@@ -26,6 +28,7 @@ class Community(models.Model):
     def __str__(self):
         return str(self.title)
 
+# Community 댓글 table 생성
 class CommunityComments(models.Model):
     id = models.BigAutoField(primary_key=True)
     content = models.TextField()

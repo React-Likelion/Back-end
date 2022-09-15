@@ -1,7 +1,6 @@
 from .models import User, Logs
 from .tokens import account_activation_token
-from rest_framework import serializers, status
-from rest_framework.response import Response
+from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes
@@ -10,6 +9,7 @@ from django.core.mail import EmailMessage
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
 
+# 회원가입 Serializer
 class SignupSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required = True,
@@ -18,12 +18,14 @@ class SignupSerializer(serializers.ModelSerializer):
         required=True,
         write_only = True,
     )
+    # 비밀번호 Check
     password2 = serializers.CharField(write_only = True, required=True)
     
     class Meta:
         model = User
         fields = '__all__'
     
+    # pw와 pw1이 일치하지 않을 때 경고
     def validate(self, data):
         if data['password'] != data['password2']:
             raise serializers.ValidationError({
@@ -32,6 +34,7 @@ class SignupSerializer(serializers.ModelSerializer):
         
         return data
 
+    # 회원정보 생성
     def create(self, validated_data):
         user = User.objects.create(
             identification = validated_data['identification'],
@@ -47,14 +50,16 @@ class SignupSerializer(serializers.ModelSerializer):
         user.is_active = False
         user.save()
 
+        # 이메일 인증 url 생성
+        # render_to_string : template 객체를 반환함과 동시에 render
         message = render_to_string('account_activate_email.html', {
           'user': user,
           'domain': 'https://port-0-back-end-14q6cqs24l6kns2t6.gksl1.cloudtype.app',
-          'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+          'uid': urlsafe_base64_encode(force_bytes(user.pk)),   # user.pk 값 암호화
           'token': account_activation_token.make_token(user),
         })
 
-
+        # 회원가입 인증 이메일 전송
         mail_subject = 'Re:act 계정을 활성화 해주세요'
         to_email = validated_data['email']
         email = EmailMessage(mail_subject, message, to=[to_email])
@@ -62,6 +67,7 @@ class SignupSerializer(serializers.ModelSerializer):
     
         return user
 
+# 로그인 Serializer
 class LoginSerializer(serializers.ModelSerializer):
     identification = serializers.CharField(
         required = True,
@@ -92,7 +98,7 @@ class LoginSerializer(serializers.ModelSerializer):
             else:
                 raise serializers.ValidationError("회원정보가 일치하지 않습니다.")
         
-            token = RefreshToken.for_user(user=user)
+            token = RefreshToken.for_user(user=user)  # access token 발급을 위해 user의 refresh token을 가져옴
             data = {
                 'user' : user.id, 
                 'email' : user.email,
@@ -116,11 +122,13 @@ class PointSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'nickname', 'point', 'log')
 
+# 회원 포인트 Serializer
 class UserPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'nickname', 'point')
 
+# 회원정보 수정 Serializer
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         required=True,
@@ -132,7 +140,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
-        read_only_fields = ('email','point',)
+        read_only_fields = ('email','point',)   # email, point 수정 불가
 
     def validate(self, data):
         if data['password'] != data['password2']:
@@ -142,3 +150,8 @@ class UserSerializer(serializers.ModelSerializer):
         
         return data
 
+# User 정보 상세페이지
+class UserDetailSerializer(serializers.ModelSerializer): 
+    class Meta:
+        model = User
+        fields = '__all__'

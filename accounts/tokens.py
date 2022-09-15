@@ -1,6 +1,7 @@
 import six  #pip install six
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
+# 이메일 인증을 위한 token 발급
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
   def _make_hash_value(self, user, timestamp):
       return (

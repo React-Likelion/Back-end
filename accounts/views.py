@@ -7,6 +7,7 @@ from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.decorators import action
 
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
@@ -127,7 +128,7 @@ class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 회원 상세페이지 ViewSet
-class UserDetailViewSet(ModelViewSet):
+class UserDetailViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserDetailSerializer
 

@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import CommunityViewset, CommunityCommentsViewset, MainPageViewset, NoticeViewset
+from .views import CommunityViewset, CommunityCommentsViewset, NoticeViewset
 from rest_framework.routers import DefaultRouter
 
 # Community 라우터

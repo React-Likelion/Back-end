@@ -1,4 +1,5 @@
 import json
+from xmlrpc.client import ServerProxy
 from django.db.models import Count
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny
@@ -267,7 +268,6 @@ class CommentViewSet(ModelViewSet):
                             status=status.HTTP_400_BAD_REQUEST)"""
 
 
-
 class ClubsNewViewSet(ModelViewSet):
     permission_classes = [AllowAny,]
     queryset = Clubs.objects.all().order_by('-id')
@@ -282,6 +282,7 @@ class ClubsMemberViewSet(ModelViewSet):
     serializer_class = ClubsSerializer
 
 class SignedClubViewSet(ModelViewSet):
+    serializer_class = ClubsSerializer
     queryset = Clubs.objects.all()
     
     # 소속된 모든 clubs을 json으로 return
@@ -291,24 +292,22 @@ class SignedClubViewSet(ModelViewSet):
         for club in self.queryset:
             member_list = club.member.all()
             if User.objects.get(id=self.kwargs.get('pk')) in member_list:
-                join_clubs.append(club.id)
-        data = {"joined":join_clubs}
-        data = json.dumps(data)
-        return Response(data=data)
+                join_clubs.append(club)
+        serializer = self.get_serializer(join_clubs, many=True)
+        return Response(data=serializer.data)
 
 class MakeClubViewSet(ModelViewSet):
+    serializer_class = ClubsSerializer
     queryset = Clubs.objects.all()
     
     # 제작한 모든 clubs를 json으로 return
     @action(detail=True, methods=['GET'])
     def get_made_club(self, request, **kwargs):
-        join_clubs = []
-        for club in self.queryset:
-            if User.objects.get(id=self.kwargs.get('pk')) == club.leader_id:
-                join_clubs.append(club.id)
-        data = {"made":join_clubs}
-        data = json.dumps(data)
-        return Response(data=data)
+        made_club = self.queryset.filter(leader_id=self.kwargs.get('pk'))
+        serializer = self.get_serializer(made_club, many=True)
+        return Response(data=serializer.data)
+
+        
 
 class MainViewSet(ModelViewSet):
     permission_classes = [AllowAny]

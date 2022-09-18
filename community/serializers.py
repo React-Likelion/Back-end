@@ -2,10 +2,10 @@ from rest_framework import serializers
 from .models import Community, CommunityComments
 
 class CommunitySerializers(serializers.ModelSerializer):
-    
+
     class Meta:
         model = Community
-        fields = '__all__'
+        fields = ["title", "description", "image", "create_time", "writer_nickname", "writer_id", "category", "comment_cnt"]
 
 class CommunityCommentsSerializers(serializers.ModelSerializer):
 

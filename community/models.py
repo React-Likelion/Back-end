@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import User
+import community
 
 # category choice field
 CATEGORY = [
@@ -13,7 +14,6 @@ class Community(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.TextField()
     description = models.TextField()
-    image = models.ImageField(blank=True, upload_to="community/", null=True)
     create_time = models.DateTimeField('CREATE DT', auto_now_add=True)
 
     writer_nickname = models.ForeignKey(User, to_field='nickname', on_delete=models.CASCADE, related_name='community_writer')
@@ -27,6 +27,11 @@ class Community(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+#커뮤니티 이미지 생성
+class Community_Image(models.Model):
+    community=models.ForeignKey(Community, on_delete=models.CASCADE, related_name='community_image')
+    image=models.ImageField(blank=True, upload_to="lectures/", null=True)
 
 # Community 댓글 table 생성
 class CommunityComments(models.Model):

@@ -1,3 +1,4 @@
+from distutils.command.upload import upload
 from accounts.models import User
 from django.db import models
 
@@ -69,19 +70,17 @@ class Lectures(models.Model):
     # 강의 조회수
     visit_cnt = models.IntegerField(default = 0)
     
-    # 강의 참고 이미지
-    image1 = models.ImageField(upload_to="lectures/")
-    image2 = models.ImageField(blank=True, upload_to="lectures/", null=True)
-    image3 = models.ImageField(blank=True, upload_to="lectures/", null=True)
-    image4 = models.ImageField(blank=True, upload_to="lectures/", null=True)
-    image5 = models.ImageField(blank=True, upload_to="lectures/", null=True)
-    
-
     class Meta:
         db_table = 'lectures'
 
     def __str__(self):
         return str(self.title)
+    
+
+#이미지 테이블 생성
+class Lecture_Image(models.Model):
+    lecture=models.ForeignKey(Lectures, on_delete=models.CASCADE, related_name='lectures_image')
+    image=models.ImageField(blank=True, upload_to="lectures/", null=True)
 
 # 강의 수강
 class EnrollStudents(models.Model):

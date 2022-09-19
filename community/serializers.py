@@ -1,14 +1,35 @@
 from rest_framework import serializers
-from .models import Community, CommunityComments
+from .models import Community, CommunityComments, Community_Image
+
+#이미지 serializer추가
+class CommunityImageSerializer(serializers.ModelSerializer):
+    image=serializers.ImageField(use_url=True)
+    
+    class Meta:
+        model=Community_Image
+        fields=['image']
 
 class CommunitySerializers(serializers.ModelSerializer):
+    images=serializers.SerializerMethodField()    
     
     class Meta:
         model = Community
         fields = '__all__'
+        
+    def get_images(self, obj):
+        image=obj.community_image.all()
+        return CommunityImageSerializer(instance=image, many=True, context=self.context).data
+
+    def create(self, validated_data):
+        instance = Community.objects.create(**validated_data)
+        image_set = self.context['request'].FILES
+        
+        #post요청에서 받아온 이미지들에 대해서 각각 Clubsboard_image테이블에 create
+        for image_data in image_set.getlist('image'):
+            Community_Image.objects.create(community=instance, image=image_data)
+        return instance
 
 class CommunityCommentsSerializers(serializers.ModelSerializer):
-
     class Meta:
         model = CommunityComments
         fields = '__all__'

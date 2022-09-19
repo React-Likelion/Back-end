@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.decorators import action
 
 # lecture
 class LecturesViewSet(viewsets.ModelViewSet):
@@ -64,14 +65,19 @@ class LecturesViewSet(viewsets.ModelViewSet):
         serializer = LecturesSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # 강의를 조회하면 조회수 증가
-    def retrieve(self, request, pk=None):
-        view = Lectures.objects.get(id = pk)
-        view.visit_cnt += 1 
-        view.save()      
-        data = self.serializer_class(view).data
+    #강의를 조회하면 조회수 증가, 기존 코드에서 변경
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.visit_cnt+=1
+        instance.save()
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
         
-        return Response(data, status=status.HTTP_202_ACCEPTED)
+        # view = Lectures.objects.get(id = pk)
+        # view.visit_cnt += 1 
+        # view.save()      
+        # data = self.serializer_class(view).data
+        # return Response(data, status=status.HTTP_202_ACCEPTED)
 
 # 강의 등록 리스트
 class LecturesEnrollViewSet(viewsets.ModelViewSet):
@@ -79,7 +85,7 @@ class LecturesEnrollViewSet(viewsets.ModelViewSet):
     queryset = Lectures.objects.all()
     serializer_class = LecturesSerializer
 
-    # 강의 수강 신청 
+    #강의 수강 신청 
     def update(self, request, pk=None):
         queryset = Lectures.objects.all()
 

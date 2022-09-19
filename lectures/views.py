@@ -1,3 +1,4 @@
+from clubs import serializer
 from .models import Lectures
 from accounts.models import User, Logs
 from .serializers import LecturesSerializer
@@ -62,7 +63,9 @@ class LecturesViewSet(viewsets.ModelViewSet):
                 else:
                     q.add(Q(sub_category__in=sub_category), q.AND)
         queryset = data.filter(q)
+        #수정해야됨. 사유 : context에 값이 들어가지 않음.
         serializer = LecturesSerializer(queryset, many=True)
+        #serializer = self.get_serializer(queryset)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     #강의를 조회하면 조회수 증가, 기존 코드에서 변경

@@ -31,7 +31,7 @@ class Community(models.Model):
 #커뮤니티 이미지 생성
 class Community_Image(models.Model):
     community=models.ForeignKey(Community, on_delete=models.CASCADE, related_name='community_image')
-    image=models.ImageField(blank=True, upload_to="lectures/", null=True)
+    image=models.ImageField(blank=True, upload_to="community/", null=True)
 
 # Community 댓글 table 생성
 class CommunityComments(models.Model):

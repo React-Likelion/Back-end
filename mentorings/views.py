@@ -23,7 +23,7 @@ class MentoringViewSet(viewsets.ModelViewSet):
     # filterset_fields=['title', 'age_group', 'location', 'field']
 
     def get_queryset(self):
-        queryset=mentorings.objects.all()
+        queryset=super().get_queryset()
         location=self.request.GET.getlist('location',None)
         limit=self.request.GET.getlist('limit',None)
         age_group=self.request.GET.getlist('age_group',None)
@@ -46,7 +46,7 @@ class MentoringViewSet(viewsets.ModelViewSet):
             filter_condition.add(Q(field__in=field), Q.AND)
 
         if title:
-            filter_condition.add(Q(title=title), Q.AND)
+            filter_condition.add(Q(title__contains=title), Q.AND)
             
         if popular:
             queryset = queryset.filter(filter_condition).distinct().order_by('-member_cnt', '-create_date')
@@ -171,4 +171,3 @@ class Mentoring_ChatsViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-    

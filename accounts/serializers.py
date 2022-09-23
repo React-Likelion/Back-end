@@ -54,7 +54,7 @@ class SignupSerializer(serializers.ModelSerializer):
         # render_to_string : template 객체를 반환함과 동시에 render
         message = render_to_string('account_activate_email.html', {
           'user': user,
-          'domain': 'https://port-0-back-end-14q6cqs24l6kns2t6.gksl1.cloudtype.app',
+          'domain': 'http://ec2-3-35-49-164.ap-northeast-2.compute.amazonaws.com:8000',
           'uid': urlsafe_base64_encode(force_bytes(user.pk)),   # user.pk 값 암호화
           'token': account_activation_token.make_token(user),
         })

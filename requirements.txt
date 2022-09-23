@@ -2,7 +2,6 @@ asgiref==3.5.2
 charset-normalizer==2.1.0
 coreapi==2.3.3
 coreschema==0.0.4
-Django==4.0.6
 django-cors-headers==3.13.0
 django-filter==22.1
 djangorestframework==3.13.1
@@ -13,7 +12,6 @@ inflection==0.5.1
 itypes==1.2.0
 Jinja2==3.1.2
 MarkupSafe==2.1.1
-mysqlclient==2.1.1
 packaging==21.3
 Pillow==9.2.0
 PyJWT==2.4.0

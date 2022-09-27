@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from django_filters.rest_framework import DjangoFilterBackend
+from .filters import CommunityFilter
 
 # Community 
 class CommunityViewset(viewsets.ModelViewSet):
@@ -16,8 +16,8 @@ class CommunityViewset(viewsets.ModelViewSet):
     queryset = Community.objects.all().order_by('-create_time') 
     serializer_class = CommunitySerializers
     # 검색기능('제목', '내용', '카테고리', '작성자')
-    filter_backends=[DjangoFilterBackend]
-    filterset_fields=['title', 'description', 'category','writer_id']
+    # filterset_fields = ('title', 'description', 'category','writer_id')
+    filterset_class = CommunityFilter
 
     # 메인페이지에 보여질 5개의 최신 게시글 List
     @action(detail=False)
@@ -25,6 +25,14 @@ class CommunityViewset(viewsets.ModelViewSet):
         queryset = self.get_queryset().order_by('-id')[:5]
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+    
+    # 게시판 상단에 최신의 공지사항 3개 고정 출력
+    @action(detail=False)
+    def notice(self, request):
+        queryset = Community.objects.all().filter(category='공지').order_by('-create_time')[:3]
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 # Community 댓글
 class CommunityCommentsViewset(viewsets.ModelViewSet):
@@ -54,15 +62,14 @@ class MainPageViewset(viewsets.ModelViewSet):
     queryset = Community.objects.all().order_by('-create_time')[:5]
     serializer_class = CommunitySerializers
  """
-
+""" 
 # 게시판 상단에 최신의 공지사항 3개 고정 출력
 class NoticeViewset(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Community.objects.all().order_by('-create_time')[:3]
+    queryset = Community.objects.all().filter(category='공지').order_by('-create_time')[:3]
     serializer_class = CommunitySerializers
-    filter_backends=[DjangoFilterBackend]
-    filterset_fields=['category']
-""" 
+    
+
     def retrieve(self, request, pk=None, pk1= None):
         queryset = CommunityComments.objects.filter(board_id=pk).filter(id=pk1)
         serializer = CommunityCommentsSerializers(queryset, many=True)

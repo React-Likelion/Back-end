@@ -129,26 +129,12 @@ class UserPointSerializer(serializers.ModelSerializer):
         fields = ('id', 'nickname', 'point')
 
 # 회원정보 수정 Serializer
-class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(
-        required=True,
-        write_only = True,
-    )
-
-    password2 = serializers.CharField(write_only = True, required=True)
-    
+class UserSerializer(serializers.ModelSerializer):  
     class Meta:
         model = User
         fields = '__all__'
         read_only_fields = ('email','point',)   # email, point 수정 불가
 
-    def validate(self, data):
-        if data['password'] != data['password2']:
-            raise serializers.ValidationError({
-                "password" : "Password fields didn't match"
-            })
-        
-        return data
 
 # User 정보 상세페이지
 class UserDetailSerializer(serializers.ModelSerializer): 

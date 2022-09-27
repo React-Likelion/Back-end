@@ -69,7 +69,7 @@ class Lectures(models.Model):
     sub_category = models.CharField(max_length=10,choices=SUB_CATEGORY)
 
     writer_nickname = models.ForeignKey(User, to_field='nickname', on_delete=models.CASCADE, related_name='writer')
-   
+
     create_date = models.DateTimeField('CREATE DT', auto_now_add=True)
 
     # 강의 수강 멤버 및 수 

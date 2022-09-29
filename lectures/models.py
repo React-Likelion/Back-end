@@ -83,7 +83,7 @@ class Lectures(models.Model):
     # 강의 조회수
     visit_cnt = models.IntegerField(default = 0)
     
-    thumbnail=models.ImageField(upload_to="lectures/")
+    thumbnail = models.ImageField(upload_to = "lectures/", default = '')
     
     class Meta:
         db_table = 'lectures'

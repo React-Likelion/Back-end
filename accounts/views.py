@@ -114,17 +114,15 @@ class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
 
     def patch(self, request):
         serializer = self.get_serializer(data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            res = Response(
-                {
-                    "user": serializer.data,
-                    "message": "update successs",
-                },
-                status=status.HTTP_200_OK,
-            )
+        serializer.save()
+        Response(
+            {
+                "user": serializer.data,
+                "message": "update successs",
+            },
+            status=status.HTTP_200_OK,
+        )
             
-            return res
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 회원 상세페이지 ViewSet

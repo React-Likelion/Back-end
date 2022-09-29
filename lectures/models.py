@@ -63,7 +63,7 @@ class Lectures(models.Model):
     description = models.TextField()
     price = models.IntegerField()
     youtube_link = models.CharField(max_length=255)
-    thumbnail = models.ImageField(upload_to="lectures/")
+    thumbnail = models.ImageField(upload_to="lectures/",default = '')
     
     # 카테고리
     main_category = models.CharField(max_length=10,choices=MAIN_CATEGORY)

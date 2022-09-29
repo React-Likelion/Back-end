@@ -142,5 +142,5 @@ class UserDetailViewSet(viewsets.ModelViewSet):
 
 user_detail = UserDetailViewSet.as_view({
     'get': 'retrieve',
-    'patch' : 'partial_update'
+    'patch' : 'partial_update',
 })

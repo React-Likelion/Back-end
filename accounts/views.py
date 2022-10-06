@@ -105,25 +105,6 @@ class UserPointView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserPointSerializer
 
-# 회원정보 수정 view
-class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated,]
-    
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def patch(self, request):
-        serializer = self.get_serializer(data=request.data, partial=True)
-        serializer.save()
-        Response(
-            {
-                "user": serializer.data,
-                "message": "update successs",
-            },
-            status=status.HTTP_200_OK,
-        )
-            
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # 회원 상세페이지 ViewSet
 class UserDetailViewSet(viewsets.ModelViewSet):
@@ -140,7 +121,3 @@ class UserDetailViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-user_detail = UserDetailViewSet.as_view({
-    'get': 'retrieve',
-    'patch' : 'partial_update',
-})

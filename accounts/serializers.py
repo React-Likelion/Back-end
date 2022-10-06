@@ -9,8 +9,8 @@ from django.core.mail import EmailMessage
 from django.contrib.auth.models import update_last_login
 from django.contrib.auth import authenticate
 
-# 회원가입 Serializer
-class SignupSerializer(serializers.ModelSerializer):
+# 회원가입, User List, Detail, Delete Serializer
+class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required = True,
     ),
@@ -67,6 +67,13 @@ class SignupSerializer(serializers.ModelSerializer):
     
         return user
 
+# 회원정보 수정 Serializer
+class UserUpdateSerializer(serializers.ModelSerializer): 
+    class Meta:
+        model = User
+        fields = '__all__'
+        read_only_fields = ('email','point') # email, point 수정 불가
+
 # 로그인 Serializer
 class LoginSerializer(serializers.ModelSerializer):
     identification = serializers.CharField(
@@ -109,8 +116,7 @@ class LoginSerializer(serializers.ModelSerializer):
             }   
             return data
         raise serializers.ValidationError("계정이 활성화 전입니다. 계정을 활성화하세요.")
-
-
+        
 class LogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Logs
@@ -128,16 +134,11 @@ class UserPointSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'nickname', 'point')
 
+
 # 회원정보 수정 Serializer
-class UserSerializer(serializers.ModelSerializer):  
-    class Meta:
-        model = User
-        fields = '__all__'
-        read_only_fields = ('email','point',)   # email, point 수정 불가
+# class UserSerializer(serializers.ModelSerializer):  
+#     class Meta:
+#         model = User
+#         fields = '__all__'
+#         read_only_fields = ('email','point',)   # email, point 수정 불가
 
-
-# User 정보 상세페이지
-class UserDetailSerializer(serializers.ModelSerializer): 
-    class Meta:
-        model = User
-        fields = '__all__'

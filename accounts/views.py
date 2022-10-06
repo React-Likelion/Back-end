@@ -1,33 +1,42 @@
 import traceback
 from .models import User
 from .tokens import account_activation_token
-from .serializers import SignupSerializer, LoginSerializer, UserSerializer, PointSerializer, UserPointSerializer, UserDetailSerializer
+from .serializers import UserSerializer, LoginSerializer, PointSerializer, UserPointSerializer, UserUpdateSerializer
 
 from rest_framework import status, generics, views, viewsets
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 from rest_framework.decorators import action
 
 from django.utils.encoding import force_str
+
 from django.utils.http import urlsafe_base64_decode
 from django.http import HttpResponse
 from django.shortcuts import redirect
 
-# 회원 목록 view
-class UserListView(generics.ListAPIView):
-    permission_classes = [AllowAny,]
 
-    queryset = User.objects.all()
-    serializer_class = SignupSerializer
-
-# 회원가입 view
-class SignupView(generics.CreateAPIView):
+# 회원가입, User List, Detail, Delete viewset
+class UserViewSet(viewsets.ModelViewSet):
+    
     permission_classes = [AllowAny,]
     queryset = User.objects.all()
 
-    serializer_class = SignupSerializer
-    def post(self, request):
+    serializer_class = UserSerializer
+    # login_serializer_class = LoginSerializer
+    serializer_classes = {
+        'login': LoginSerializer
+    }
+
+    def get_serializer_class(self):
+        if hasattr(self, 'serializer_classes'):
+            return self.serializer_classes.get(self.action, self.serializer_class)
+
+        return super().get_serializer_class()
+
+    @action(detail=False, methods=['POST'])
+    def signup(self, request, pk):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -53,6 +62,22 @@ class SignupView(generics.CreateAPIView):
             return res
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @action(detail=False, methods=['POST'])
+    def login(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception = True)
+        token = serializer.validated_data
+        return Response({"token":token}, status=status.HTTP_200_OK)
+   
+    @action(detail=False, methods=['DELETE'])
+    def logout(self, request):
+        response = Response({"message": "Logout success"}, status=status.HTTP_202_ACCEPTED)
+        # cookie에서 access, refresh 토큰 삭제하여 로그아웃
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+        return response
+
+
 # 회원정보 활성화
 class UserActivate(views.APIView):
     permission_classes = [AllowAny,]
@@ -76,61 +101,10 @@ class UserActivate(views.APIView):
         except Exception as e:  # 예외 발생 시
             print(traceback.format_exc(e))
 
-# 로그인 & 로그아웃 view
-class LoginView(generics.GenericAPIView):
-    serializer_class = LoginSerializer
-    permission_classes = [AllowAny,]
-    
-    # Login
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception = True)
-        token = serializer.validated_data
-        return Response({"token":token}, status=status.HTTP_200_OK)
-   
-    # Logout
-    def delete(self, request):
-        response = Response({"message": "Logout success"}, status=status.HTTP_202_ACCEPTED)
-        # cookie에서 access, refresh 토큰 삭제하여 로그아웃
-        response.delete_cookie("access_token")
-        response.delete_cookie("refresh_token")
-        return response
-
-
-class PointViewSet(viewsets.ModelViewSet):
+#회원정보 수정 ViewSet
+class UserUpdateViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class = PointSerializer
-
-class UserPointView(generics.ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserPointSerializer
-
-# 회원정보 수정 view
-class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated,]
-    
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-    def patch(self, request, pk):
-        serializer = self.get_serializer(data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            res = Response(
-                {
-                    "user": serializer.data,
-                    "message": "update successs",
-                },
-                status=status.HTTP_200_OK,
-            )
-            
-            return res
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# 회원 상세페이지 ViewSet
-class UserDetailViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserDetailSerializer
+    serializer_class = UserUpdateSerializer
 
     permission_classes = [AllowAny,]
 
@@ -142,7 +116,94 @@ class UserDetailViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
-user_detail = UserDetailViewSet.as_view({
+user_update = UserUpdateViewSet.as_view({
     'get': 'retrieve',
     'patch' : 'partial_update'
 })
+
+class PointViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = PointSerializer
+
+class UserPointView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPointSerializer
+
+
+
+
+# class LoginViewSet(viewsets.ModelViewSet):
+#     serializer_class = LoginSerializer
+#     queryset = User.objects.all()
+
+#     permission_classes = [AllowAny,]
+    
+#     # Login
+#     def post(self, request, pk):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception = True)
+#         token = serializer.validated_data
+#         return Response({"token":token}, status=status.HTTP_200_OK)
+   
+#     # Logout
+#     def delete(self, request):
+#         response = Response({"message": "Logout success"}, status=status.HTTP_202_ACCEPTED)
+#         # cookie에서 access, refresh 토큰 삭제하여 로그아웃
+#         response.delete_cookie("access_token")
+#         response.delete_cookie("refresh_token")
+#         return response
+        
+# login = LoginViewSet.as_view({
+#     'post': 'create',
+#     'delete' : 'destroy'
+# })
+
+# 로그인 & 로그아웃 view
+# class LoginView(generics.GenericAPIView):
+#     serializer_class = LoginSerializer
+#     permission_classes = [AllowAny,]
+    
+#     # Login
+#     def post(self, request):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception = True)
+#         token = serializer.validated_data
+#         return Response({"token":token}, status=status.HTTP_200_OK)
+   
+#     # Logout
+#     def delete(self, request):
+#         response = Response({"message": "Logout success"}, status=status.HTTP_202_ACCEPTED)
+#         # cookie에서 access, refresh 토큰 삭제하여 로그아웃
+#         response.delete_cookie("access_token")
+#         response.delete_cookie("refresh_token")
+#         return response
+
+
+# 회원 목록 view
+# class UserListView(generics.ListAPIView):
+#     permission_classes = [AllowAny,]
+
+#     queryset = User.objects.all()
+#     serializer_class = SignupSerializer
+
+# 회원정보 수정 view
+# class UserUpdateView(generics.RetrieveUpdateDestroyAPIView):
+#     permission_classes = [IsAuthenticated,]
+    
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+
+#     def patch(self, request, pk):
+#         serializer = self.get_serializer(data=request.data, partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             res = Response(
+#                 {
+#                     "user": serializer.data,
+#                     "message": "update successs",
+#                 },
+#                 status=status.HTTP_200_OK,
+#             )
+            
+#             return res
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -36,8 +36,9 @@
     
     [mentoring](https://www.notion.so/ca8b77e0ae214e5eb74f17bc14ac3e79)
     
- - 🗄 DB 설계
-    
+ - 🗄 DB 설계 <br><br>
+    <img width="784" alt="스크린샷 2022-10-24 오전 3 03 03" src="https://user-images.githubusercontent.com/90851865/197410471-8b36d1ae-cb31-48f8-bc51-372e82a1ce50.png">
+
     
     | 1 | 소문자만 사용 |
     | --- | --- |

@@ -141,4 +141,3 @@ class UserPointSerializer(serializers.ModelSerializer):
 #         model = User
 #         fields = '__all__'
 #         read_only_fields = ('email','point',)   # email, point 수정 불가
-

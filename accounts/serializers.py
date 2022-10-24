@@ -35,7 +35,7 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
     # 회원정보 생성
-    def create(self, validated_data):
+    def create(self, validated_data, pk):
         user = User.objects.create(
             identification = validated_data['identification'],
             name = validated_data['name'],

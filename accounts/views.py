@@ -36,7 +36,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return super().get_serializer_class()
 
     @action(detail=False, methods=['POST'])
-    def signup(self, request, pk):
+    def signup(self, request):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()

@@ -94,7 +94,7 @@ class UserActivate(views.APIView):
                # 해당 user가 존재하고 token도 유효하다면 active를 활성화 해주고 로그인 페이지로 이동
                user.is_active = True
                user.save()
-               return redirect("http://localhost:3000/login")
+               return redirect("http://re-act.s3-website.ap-northeast-2.amazonaws.com/login")
             else:
                return HttpResponse('만료된 링크입니다', status=status.HTTP_400_BAD_REQUEST)
 

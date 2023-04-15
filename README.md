@@ -1,86 +1,139 @@
-<div align="center">
-<img width="763" alt="image" src="https://user-images.githubusercontent.com/90851865/197409675-2719fbb3-fdee-4bce-b90b-046fb4e3d143.png">
+<p align="center">
+  <br>
+  <img src="https://user-images.githubusercontent.com/72565083/231432709-8cd72098-3085-4cde-a9bb-0522cb35ad87.png" alt='프로젝트 로고' width='900px'>
+  <br>
+  <p align='right'>
+    <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FReact-Likelion%2FFront-end&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false"/></a>
+  </p>
+</p>
+
+## 🪄 프로젝트 소개
+
+<div align="left">
+  <div>Re:act는 <b>은퇴자들의 제 2의 삶을 위한 플랫폼</b>입니다. </div>
+  <div>주요 기능으로는 강의 등록 및 조회, 동호회 개설 및 조회, 멘토링 개설 및 조회 등이 있습니다.</div>
 </div>
 
+<br/>
+
+## 🤔 기획 배경
+
+* 베이비 붐 세대들의 고령화로 인한 은퇴자가 빠르게 증가하고 있는 추세이며, 이에 따라 많은 은퇴자들이 은퇴 후 단순 자영업에 종사하고 있습니다.
+* 우리는 단순 자영업의 불확실성 및 어려움을 해결하고, 은퇴자분들의 재능을 컨텐츠화하고 커뮤니티를 형성하여 **은퇴 후 제 2의 삶을 꾸려나갈 수 있는 플랫폼**인 Re:act를 구상하게 되었습니다.
+* 멘토-멘티 매칭 서비스, 창업 컨설팅 기능 또한 제공하여 은퇴자들이 또 다른 시작을 할 수 있도록 도움을 주기 위해 이러한 서비스를 기획하게 되었습니다.
+
+
+<!-- ## 🪄 배포 주소 --> 
+<!-- 배포 주소 작성 -->
+
 <br>
+
+## 🧑‍💻 팀원 소개
+
+### Front-end
+
+| 이름 | 박규현 | 안재현 | 이수화 | 이태헌 
+| :------------: | :------------: | :-----------: |  :------------: | :-----------: |  
+|  | <img src="https://user-images.githubusercontent.com/72565083/231422017-b00c5eb1-88e6-44dd-b7c3-3aa92fe88853.png" width="100"/> | <img src="https://user-images.githubusercontent.com/72565083/231421315-b32e29ce-563f-4ae2-8b72-c43fc46ddba4.png" width="100"/> | <img src="https://user-images.githubusercontent.com/72565083/231422474-05871351-997f-4c23-be81-de8d53864a79.png" width="100"/> |<img src="https://user-images.githubusercontent.com/72565083/231422717-02b38f87-505f-4aec-9597-39f8bc5523f3.png" width="100"/> |
+| 깃허브 | [@freemoon99](https://github.com/freemoon99) | [@JaeHyunGround](https://github.com/JaeHyunGround) | [@rosielsh](https://github.com/rosielsh)|[@forever2969](https://github.com/forever2969)|
+
+### Back-end
+
+| 이름 | 공혜연 | 서장준 | 신영한 | 안현진 | 이서현 | 
+| :------------: | :------------: | :-----------: |  :------------: | :-----------: |  :-----------: | 
+|  | <img src="https://user-images.githubusercontent.com/72565083/231424185-242ece05-4bd3-4a87-82cd-87c8a300f5e9.png" width="100"/> | <img src="https://user-images.githubusercontent.com/72565083/231424969-4ea9c083-4d5b-4bc0-a719-07671a95ebd3.png" width="100"/> | <img src="https://user-images.githubusercontent.com/72565083/231425277-6bd18165-f96e-4147-8340-582619fa8d22.png" width="100"/> | <img src="https://user-images.githubusercontent.com/72565083/231425439-77a64dd5-95fd-4123-8fb8-0d688212cc2c.png" width="100"/> | <img src="https://user-images.githubusercontent.com/72565083/231425763-83e74b6f-0a33-4220-85ac-ca23b60b4f6b.png" width="100"/> 
+| 깃허브 | [@hxeyexn](https://github.com/hxeyexn) | [@Daki404](https://github.com/Daki404) | [@syhan7516](https://github.com/syhan7516) | [@guswlsdl0121](https://github.com/guswlsdl0121) | [@kathyleesh](https://github.com/kathyleesh) |
+
 <br>
 
+## ⚒️ 기술스택
 
-## [SWAGGER Re:act](http://ec2-3-35-49-164.ap-northeast-2.compute.amazonaws.com:8000/swagger/) <br> <br> <img width="1440" alt="스크린샷 2022-10-24 오전 3 29 15" src="https://user-images.githubusercontent.com/90851865/197409373-de2eea4a-30bb-49ff-bab9-9060214bfdda.png">
+<table>
+<tr>
+ <td align="center">언어</td>
+ <td>
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=JavaScript&logoColor=ffffff"/>
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=Python&logoColor=white"/></a>
+ </td>
+</tr>
+<tr>
+ <td align="center">프레임워크</td>
+ <td>
+  <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=Django&logoColor=ffffff"/>&nbsp  
+</tr>
+<tr>
+ <td align="center">라이브러리</td>
+ <td>
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=ffffff"/>&nbsp  
+</tr>
+<tr>
+ <td align="center">패키지 매니저</td>
+ <td>
+    <img src="https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white">&nbsp 
+  </td>
+</tr>
+<tr>
+ <td align="center">인프라</td>
+ <td>
+  <img src="https://img.shields.io/badge/MYSQL-4479A1?style=for-the-badge&logo=MYSQL&logoColor=ffffff"/>&nbsp
+  <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=ffffff"/>&nbsp
+  <img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=ffffff"/>&nbsp
+  <img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=ffffff"/>&nbsp
+</tr>
+<tr>
+ <td align="center">협업툴</td>
+ <td>
+    <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>&nbsp 
+    <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>&nbsp 
+    
+ </td>
+</tr>
+<tr>
+ <td align="center">기타</td>
+ <td>
+    <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/>&nbsp 
+    <img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"/>&nbsp 
+    <img src="https://img.shields.io/badge/swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white"/>&nbsp 
+ </td>
+</tr>
+</table>
 
-- 🖥️ UI
-|<img width="530" alt="스크린샷 2022-10-24 오전 3 04 53" src="https://user-images.githubusercontent.com/90851865/197408611-008c72a6-cf9c-4d86-a5d5-11807f4ad7cf.png">|<img width="530" alt="스크린샷 2022-10-24 오전 3 04 59" src="https://user-images.githubusercontent.com/90851865/197408623-b54cd82f-92fc-49c0-bae6-b7ea7b555255.png">|<img width="530" alt="스크린샷 2022-10-24 오전 3 05 06" src="https://user-images.githubusercontent.com/90851865/197408637-48b5d5a6-2de9-4230-a466-44072a3ad578.png">|<img width="530" alt="스크린샷 2022-10-24 오전 3 05 15" src="https://user-images.githubusercontent.com/90851865/197408643-ac4de293-0ee7-47e2-8987-ab5e801aaacc.png">|<img width="494" alt="스크린샷 2022-10-24 오전 3 05 28" src="https://user-images.githubusercontent.com/90851865/197408653-e8b633df-4bcf-4f80-8edf-29257fb5a920.png">|
-  |:---:|:---:|:---:|:---:|:---:|
+<br/>
+
+
+<!-- ## 📖 화면 구성
+
+### 1. 메인 페이지
+
+### 2. 강의 페이지
+
+### 3. 멘토링 페이지
+
+### 4. 동호회 페이지
+
+### 5. 커뮤니티 페이지 -->
+
+<br/>
+
+## ✨ 주요 기능
+
+1. 강의 등록 및 조회
+2. 멘토링 개설 / 조회 / 가입 신청
+3. 동호회 개설 / 조회 / 가입 신청
+4. 커뮤니티 글 등록 및 조회
+5. 컨설팅 정보 조회
+
+<br/>
+
+
+## 🪄 SWAGGER
+##  <img width="1440" alt="스크린샷 2022-10-24 오전 3 29 15" src="https://user-images.githubusercontent.com/90851865/197409373-de2eea4a-30bb-49ff-bab9-9060214bfdda.png">
+
+
+ 
+    
+## 🪄 ERD
+<img width="784" alt="스크린샷 2022-10-24 오전 3 03 03" src="https://user-images.githubusercontent.com/90851865/197410471-8b36d1ae-cb31-48f8-bc51-372e82a1ce50.png">
+
+    
   
-- 📑 API 설계
-    
-    **REST API 디자인 가이드 I** <br><br>
-    첫 번째, URI는 정보의 자원을 표현해야 한다.  (리소스명은 동사보다는 명사를 사용)<br>
-    두 번째, 자원에 대한 행위는 HTTP Method. (GET, POST, PUT, DELETE)로 표현한다.<br>
-    
-    **REST API 디자인 가이드 II**
-    1. 슬래시 구분자(/)는 계층 관계를 나타내는 데 사용
-    2. 하이픈(-)은 URI 가독성을 높이는데 사용
-    3. 밑줄(_)은 URI에 사용하지 않는다.
-    4. URI 경로에는 소문자가 적합하다.
-    5. 파일 확장자는 URI에 포함시키지 않는다.
-    6. 단수 보다는 복수 사용
-    
-    [accounts/](https://www.notion.so/146dd55eead14e03b34f12f9ec41c6cf)
-    
-    [lectures/](https://www.notion.so/7bae3c06f85741dc8c56879015fcf377)
-    
-    [clubs/ ](https://www.notion.so/77c4539b7c3f4730a3a0f76beefb143c)
-    
-    [community/](https://www.notion.so/614501115f424d978246f49a6046aa2e)
-    
-    [mentoring](https://www.notion.so/ca8b77e0ae214e5eb74f17bc14ac3e79)
-    
- - 🗄 DB 설계 <br><br>
-    <img width="784" alt="스크린샷 2022-10-24 오전 3 03 03" src="https://user-images.githubusercontent.com/90851865/197410471-8b36d1ae-cb31-48f8-bc51-372e82a1ce50.png">
-
-    
-    | 1 | 소문자만 사용 |
-    | --- | --- |
-    | 2 | 테이블 명 snake 지양, 복수형 |
-    | 3 | column은 snake 지향, 단수형 |
-    | 4 | fk.key → id |
-        
-    - members
-    
-        - [User](https://www.notion.so/7a7f526d5d0340d98fbeab9e089d97e3)
-        
-    - lecture
-        - [tags](https://www.notion.so/4038551099694c09b9956d007a4beef3)
-            
-        - [lectures](https://www.notion.so/9877f4c937d642ed91307bea325c6a8b)
-            
-    - clubs
-        - [clubs](https://www.notion.so/1fa8f57596bc4060affc41ead1498181)
-            
-        - [clubmembers](https://www.notion.so/d86b93fb14704e8eace9f01e461a637b)
-            
-        - [clubboard](https://www.notion.so/fd94112a194744359ccbfa15770aac8b)
-            
-        - [clubboard_comment](https://www.notion.so/181208d664984239bca7cd304a5e21cf)
-            
-        - [galleries](https://www.notion.so/b9817e87d5bc415ea6440a495ac70679)
-            
-        - Chatting
-            
-            firebase 사용
-            
-    - mentor&mentee
-        - [mentorings](https://www.notion.so/8773b022f8e842e0b16354a24ec718ef)
-            
-        - [mentoring_chat](https://www.notion.so/a8423bc78c374994ab38995b95aa3474)
-            
-    - community
-        - [communityboards](https://www.notion.so/aaec36fe16e04070ab7046a8b4e0582b)
-            
-        - [communityboardcomments](https://www.notion.so/889a6633b54a4ebdb88d6b4dc56132fd)
-    - [jobs](https://www.notion.so/30af1aff1bcc4b76aafa7ec5972cf4c9)
-        
-    - [locations](https://www.notion.so/dde0d0185f184901a08e4b507db09b97)
-        
-    - [fields](https://www.notion.so/a493e2c5b81141c5a4e43d17fe8d0728)
